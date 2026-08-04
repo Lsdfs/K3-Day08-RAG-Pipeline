@@ -4,6 +4,11 @@ Task 4 — Chunking & Indexing vào Vector Store.
 
 from pathlib import Path
 from typing import Any
+from dotenv import load_dotenv
+load_dotenv()
+import os
+import numpy as np
+import hashlib
 
 # Configuration — explained choices
 CHUNK_SIZE = 500         # Reasonable size for Vietnamese uni policy docs
@@ -88,22 +93,13 @@ def _split_recursive(text: str, separators: list[str]) -> list[str]:
 
 
 def embed_chunks(chunks: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Embed chunk texts. Uses sentence-transformers if available, mock fallback otherwise."""
+    """Embed chunk texts using the central embedder (OpenAI or mock)."""
     global _embedder
-    try:
-        from sentence_transformers import SentenceTransformer
-        if _embedder is None:
-            _embedder = SentenceTransformer(EMBEDDING_MODEL)
-        texts = [c["content"] for c in chunks]
-        embeddings = _embedder.encode(texts, normalize_embeddings=True)
-        for i, emb in enumerate(embeddings):
-            chunks[i]["embedding"] = emb.tolist()
-    except ImportError:
-        import hashlib
-        for c in chunks:
-            h = hashlib.sha256(c["content"].encode()).digest()
-            emb = [float(b) / 255.0 for b in h[:64]] + [0.0] * 960
-            c["embedding"] = emb[:1024]
+    embedder = get_embedder()
+    texts = [c["content"] for c in chunks]
+    embeddings = embedder.encode(texts)
+    for i, emb in enumerate(embeddings):
+        chunks[i]["embedding"] = emb.tolist() if hasattr(emb, 'tolist') else list(emb)
     return chunks
 
 
@@ -135,32 +131,37 @@ def index_to_vectorstore(chunks: list[dict[str, Any]]) -> None:
 
 
 def get_embedder():
-    """Lazy-load and return the embedder. Prefers real model, falls back to mock."""
+    """Lazy-load embedder. Uses OpenAI if EMBEDDING_PROVIDER=openai, else mock."""
     global _embedder
-    if _embedder is not None and hasattr(_embedder, '__class__'):
-        cls_name = _embedder.__class__.__name__
-        if cls_name != '_MockEmbedder':
-            return _embedder
-    try:
-        from sentence_transformers import SentenceTransformer
-        _embedder = SentenceTransformer(EMBEDDING_MODEL)
+    if _embedder is not None:
         return _embedder
-    except ImportError:
-        pass
-    if _embedder is None or _embedder.__class__.__name__ == '_MockEmbedder':
-        class _MockEmbedder:
-            def encode(self, texts, normalize_embeddings=False):
-                import numpy as np
-                import hashlib
-                if isinstance(texts, str):
-                    texts = [texts]
-                result = []
-                for t in texts:
-                    h = hashlib.sha256(t.encode()).digest()
-                    emb = [float(b) / 255.0 for b in h[:64]] + [0.0] * 960
-                    result.append(emb[:1024])
-                return np.array(result) if len(result) > 1 else np.array(result)
-        _embedder = _MockEmbedder()
+
+    provider = os.getenv("EMBEDDING_PROVIDER", "mock").lower()
+    if provider == "openai":
+        api_key = os.getenv("OPENAI_API_KEY")
+        if api_key:
+            from openai import OpenAI
+            client = OpenAI(api_key=api_key)
+            class _OpenAIEmbedder:
+                def encode(self, texts, normalize_embeddings=False):
+                    if isinstance(texts, str): texts = [texts]
+                    resp = client.embeddings.create(model="text-embedding-3-small", input=texts)
+                    result = [r.embedding for r in resp.data]
+                    return np.array(result)
+            _embedder = _OpenAIEmbedder()
+            return _embedder
+
+    # Mock fallback
+    class _MockEmbedder:
+        def encode(self, texts, normalize_embeddings=False):
+            if isinstance(texts, str): texts = [texts]
+            result = []
+            for t in texts:
+                h = hashlib.sha256(t.encode()).digest()
+                emb = [float(b) / 255.0 for b in h[:64]] + [0.0] * 960
+                result.append(emb[:1024])
+            return np.array(result)
+    _embedder = _MockEmbedder()
     return _embedder
 
 
