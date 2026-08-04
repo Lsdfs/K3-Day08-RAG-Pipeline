@@ -5,7 +5,7 @@ from .task6_lexical_search import lexical_search
 from .task7_reranking import rerank_rrf, rerank
 from .task8_pageindex_vectorless import pageindex_search
 
-SCORE_THRESHOLD = 0.3  # Calibrated: relevant queries get cosine sim >0.5, junk <0.2
+SCORE_THRESHOLD = 0.15  # Below this -> fallback
 
 
 def retrieve(query: str, top_k: int = 5, score_threshold: float = 0.3,

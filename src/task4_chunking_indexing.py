@@ -4,12 +4,15 @@ Task 4 — Chunking & Indexing vào Vector Store.
 
 from pathlib import Path
 from typing import Any
+from dotenv import load_dotenv
+load_dotenv()
 
 # Configuration — explained choices
 CHUNK_SIZE = 500         # Reasonable size for Vietnamese uni policy docs
 CHUNK_OVERLAP = 50       # Small overlap to avoid splitting mid-paragraph
 CHUNKING_METHOD = "recursive"  # RecursiveCharacterTextSplitter: safe, common, respects paragraph/line breaks
-EMBEDDING_MODEL = "BAAI/bge-m3"  # Multilingual (EN+VI), 1024 dim, strong on Vietnamese
+EMBEDDING_MODEL = "BAAI/bge-m3"  # local model
+OPENAI_EMBED_MODEL = "text-embedding-3-small"  # cheapest: $0.02/1M tokens, strong on Vietnamese
 VECTOR_STORE = "chromadb"        # Local, persistent, no Docker needed
 
 STANDARDIZED_DIR = Path(__file__).parent.parent / "data" / "standardized"
@@ -125,18 +128,39 @@ def index_to_vectorstore(chunks: list[dict[str, Any]]) -> None:
 
 
 def get_embedder():
-    """Lazy-load embedder. Uses mock by default; set FORCE_MOCK=0 in env to try real model."""
+    """Lazy-load embedder. Checks EMBEDDING_PROVIDER env: openai | local | mock."""
     global _embedder
     import os
     if _embedder is not None:
         return _embedder
-    if os.getenv("FORCE_MOCK", "1") == "0":
+
+    provider = os.getenv("EMBEDDING_PROVIDER", "mock").lower()
+
+    if provider == "openai":
+        api_key = os.getenv("OPENAI_API_KEY")
+        if api_key:
+            from openai import OpenAI
+            client = OpenAI(api_key=api_key)
+            class _OpenAIEmbedder:
+                def encode(self, texts, normalize_embeddings=False):
+                    if isinstance(texts, str):
+                        texts = [texts]
+                    import numpy as np
+                    resp = client.embeddings.create(model=OPENAI_EMBED_MODEL, input=texts)
+                    result = [r.embedding for r in resp.data]
+                    return np.array(result) if len(result) > 1 else np.array(result)
+            _embedder = _OpenAIEmbedder()
+            return _embedder
+
+    if provider == "local" and os.getenv("FORCE_MOCK", "1") != "1":
         try:
             from sentence_transformers import SentenceTransformer
             _embedder = SentenceTransformer(EMBEDDING_MODEL)
             return _embedder
         except Exception:
             pass
+
+    # Mock fallback
     import numpy as np
     import hashlib
     class _MockEmbedder:

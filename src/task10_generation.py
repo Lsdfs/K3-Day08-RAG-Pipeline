@@ -8,7 +8,7 @@ load_dotenv()
 from .task9_retrieval_pipeline import retrieve
 
 TOP_K = 5
-LLM_MODEL = os.getenv("LLM_MODEL", "openai/gpt-4o-mini")
+LLM_MODEL = os.getenv("LLM_MODEL", "openai/gpt-4o-mini")  # cheapest, $0.15/1M input
 LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://openrouter.ai/api/v1")
 LLM_API_KEY = os.getenv("OPENROUTER_API_KEY") or os.getenv("OPENAI_API_KEY") or os.getenv("DEEPSEEK_API_KEY", "")
 
