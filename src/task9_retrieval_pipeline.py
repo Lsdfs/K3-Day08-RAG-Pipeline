@@ -5,7 +5,7 @@ from .task6_lexical_search import lexical_search
 from .task7_reranking import rerank_rrf, rerank
 from .task8_pageindex_vectorless import pageindex_search
 
-SCORE_THRESHOLD = 0.15  # Below this -> fallback
+SCORE_THRESHOLD = 0.20  # Below original cosine score -> fallback to PageIndex
 
 
 def retrieve(query: str, top_k: int = 5, score_threshold: float = 0.3,
