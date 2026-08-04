@@ -25,8 +25,8 @@ pageindex>=0.1.0
 # Task 10 - Generation
 openai>=1.30.0
 
-# Group project - UI
-streamlit>=1.35.0
+# Group project - Web UI
+flask>=3.0.0
 
 # Group project - Evaluation
 ragas==0.1.21

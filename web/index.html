@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#073b5c" />
+    <title>La Bàn Hạ Long | Travel Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="sea-glow glow-one"></div><div class="sea-glow glow-two"></div>
+    <main class="shell">
+      <aside class="sidebar">
+        <a class="brand" href="/" aria-label="La Bàn Hạ Long home"><span class="brand-mark">✦</span><span>La Bàn<small>HẠ LONG TRAVEL GUIDE</small></span></a>
+        <p class="side-intro">Người bạn đồng hành giúp bạn chạm gần hơn tới vẻ đẹp kỳ quan của Vịnh Hạ Long.</p>
+        <div class="section-label">KHÁM PHÁ NHANH</div>
+        <div class="suggestions" id="suggestions">
+          <button>Vịnh Hạ Long có gì đặc biệt về cảnh quan?</button>
+          <button>Địa chất của Vịnh Hạ Long được hình thành như thế nào?</button>
+          <button>Những giá trị nổi bật của Vịnh Hạ Long là gì?</button>
+          <button>Gợi ý cho tôi một hành trình khám phá Vịnh Hạ Long.</button>
+        </div>
+        <div class="sidebar-bottom">
+          <label for="topK">Độ sâu tìm kiếm <output id="topKValue">5</output></label>
+          <input id="topK" type="range" min="3" max="10" value="5" />
+          <div class="pipeline"><span class="status-dot"></span> Kho tư liệu Hạ Long · Có trích dẫn</div>
+        </div>
+      </aside>
+      <section class="chat-panel">
+        <header class="topbar"><div><p class="eyebrow">YOUR HALONG COMPASS</p><h1>Khám phá Vịnh với <em>La Bàn</em></h1></div><button class="new-chat" id="newChat" type="button">↻ <span>Cuộc trò chuyện mới</span></button></header>
+        <div class="chat" id="chat" aria-live="polite">
+          <article class="message assistant welcome">
+            <div class="avatar">✦</div><div class="bubble"><p class="greeting">Chào bạn, người lữ hành!</p><p>Mình có thể giúp bạn khám phá cảnh quan, giá trị tự nhiên và những câu chuyện trong kho tư liệu về Vịnh Hạ Long.</p><p class="subtle">Hãy bắt đầu bằng một câu hỏi hoặc chọn một lối tắt bên trái.</p></div>
+          </article>
+        </div>
+        <form class="composer" id="composer">
+          <label class="sr-only" for="message">Câu hỏi của bạn</label>
+          <textarea id="message" rows="1" placeholder="Bạn muốn khám phá điều gì ở Hạ Long?" autocomplete="off"></textarea>
+          <button id="send" type="submit" aria-label="Gửi câu hỏi"><span>Gửi</span> <b>↑</b></button>
+        </form>
+        <p class="disclaimer">La Bàn trả lời dựa trên kho tư liệu về Vịnh Hạ Long. Hãy kiểm tra nguồn trước khi lập kế hoạch chuyến đi.</p>
+      </section>
+    </main>
+    <template id="sourceTemplate"><details class="sources"><summary>Nguồn tham khảo <span></span></summary><div class="source-list"></div></details></template>
+    <script src="/app.js"></script>
+  </body>
+</html>
