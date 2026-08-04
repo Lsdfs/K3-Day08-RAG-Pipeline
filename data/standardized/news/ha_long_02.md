@@ -1,0 +1,67 @@
+# What to Do in Ha Long Bay
+
+**Source:** https://vietnam.travel/node/1368
+
+**Crawled:** 2026-08-04T10:02:27.489426+07:00
+
+---
+
+# What to Do in Ha Long Bay
+
+## Ha Long Bay is a surreal landscape of limestone karsts erupting from the ocean like tidal waves made solid by magic and time. Declared a UNESCO World Heritage Site in 1994, this natural wonder of the world has since become the single most popular tourist attraction in all of Vietnam. The 1500km2 bay is cupped by the Vietnam coastline just south of the Chinese border and dotted with thousands of uninhabited islands, floating fishing villages, and labyrinthine cave systems teeming with fossils, rock formations, myths, and mysteries.
+
+### Snorkel and Dive to Explore Coral Reefs
+
+Though many travel guides focus on the landscape above the water, there’s a whole universe thriving below the surface. Ha Long Bay is home to more than 140 different species of coral, including rare varieties. These coral reefs cover up to 30 and even 60 percent of the area around islands like Cong Do, where legal restrictions, as well as geographic isolation, protect marine life from boat traffic, pollution, and human interference.
+
+Take a dive trip to the coral reefs and watch marine creatures like starfish, sea horses, and sea turtles through the clear water. You can also explore the underwater grottos and intricate cave systems that shelter entire ecosystems. New and experienced divers can head out with a diving school or, as an alternative, you can take a boat into deeper water and snorkel around.
+
+### Explore Ha Long by Cruise Boat
+
+Ha Long Bay is best explored from a boat. Some companies offer half-day cruises on traditional junk boats that allow you to experience the bay with sails and slow speeds. Others offer faster yachts that can quickly shuttle passengers between different islands and back. It is possible to take a quick half-day or full-day cruise through Ha Long Bay, but a longer trip is ideal. Book for two or three days with a ship that can plan for food, beverages, cocktails, and sightseeing so that you can just relax and enjoy the trip.
+
+Spend a few days on a yacht, cruising around the bay by day and sleeping on the boat by night. It's truly luxurious to be rocked to sleep by currents, and stargazing from the deck lounge of a boat anchored in the open ocean is a radically different experience from what can be seen by land. Such cruises offer buffet meals, cooking classes, or guided tours to private beaches and fishing villages. Combine different experiences for the perfect trip: plan for a relaxing “spa cruise” with deep tissue massages and yoga by sunrise, or embark on a true adventure complete with the deep-sea diving and squid fishing at moonlight.
+
+Whatever your travel style, be sure to hop off the cruise for an afternoon to kayak around the karsts. A kayak is the best way to get up close to the limestone formations, and their small size allows for the most autonomy and adventure. The bay water is calm and still, making it safe, easy, and enjoyable to paddle between a selection of islands and karsts, through caves, and around floating villages. Hop into the clear water at intervals for a swim before heading back to the yacht for sunset cocktails and dining.
+
+### Hike to Hidden Caves on Cat Ba Island
+
+Cat Ba Island, the largest in the Cat Ba archipelago, is almost entirely blanketed by rainforest. In addition to other native mammal species, the national park protects white-headed langur monkeys, which are the world’s most endangered primates. There are excellent hiking trails through the parks, and it’s possible (and suggested) to go with a guide to learn about the plants, animals, and history of the island.
+
+Some of the hiking trails go skywards towards the peaks of mountains, others terminate on pristine sand beaches, and still, others meander into hidden caves and grottoes. Hoa Cuong Cave is comparatively small but shines like diamonds in the light. Others, like Thien Long and Trung Trang, are full of stalactites and stalagmites bent and twisted into weird shapes over millions of years. It’s a strange and powerful feeling to be inside an underground world formed incomprehensibly long ago.
+
+Perhaps the most interesting cave on Cat Ba is Hospital Cave, where soldiers were sheltered during the American War. Now it’s a tourist attraction, but its medical rooms have been kept fully intact, complete with equipment.
+
+### Spelunking in Sung Sot, Me Cung, and Thien Cung Caves
+
+Outside of Cat Ba, Ha Long Bay hosts dozens of caves of varying sizes, each one a unique archeological remnant of Ha Long’s millions of years in development. Among these, Sung Sot, Me Cung, and Thien Cung are three of the region’s most interesting.
+
+Sung Sot Cave is famous for its absolutely massive size and for its inner cavern populated by strangely-shaped stalactites and stalagmites. The 10,000 square meter cave system can only be reached by hiking up a steep path, but the trek is worth it. Pass through the first cavern to enter the second chamber, where penetrating light lingers and flickers on the shapely formations, bringing elephants, mammoths, horses, and military formations to life.
+
+Sung Sot is Ha Long Bay’s largest and most famous cave, and Me Cung Cave is its oldest and narrowest. Archaeological evidence indicates that the periwinkle fossils which can still be found at the cave’s mouth are more than 10,000 years old. Squeeze through the cave’s narrow entrance to explore its complex system of chambers and tunnels, scattered with fossils and sculptured with stalactites and stalagmites.
+
+After the largest and the oldest, Thien Cung Cave completes the triad as the prettiest. As legend has it, Thien Cung was the home of the Dragon King and his wife May. The pair wed in the center of the cave with an attending audience of fairies, gods, and dragons. The cave is now illuminated by soft colored lights that cast strange shadows and lend dramatic believability to the mythical stories, while openings in the ceiling are pierced by heavenly beams of light. Exit the cave to a panoramic display of Ha Long Bay -- a view fit for a Dragon King indeed.
+
+### Visit Monkey Island
+
+Monkey Island is just 1 short kilometer from Cat Ba town but it can only be reached by boat. The isolated island was once called Cat Dua Island, or Pineapple Island, because of the pineapples growing wild along its shores. It’s better known today as Monkey Island in honor of its playful resident monkeys who frequent the beaches to frolic with tourists.
+
+Monkey Island’s scenic shoreline is perfect for sunbathers and adventurers alike. Lounge on the white sand and swim or snorkel in the clear water for a relaxing afternoon, or discover nature by sea or by land, via kayak, or on one of a number of trekking routes.
+
+### Check out Hon Ga Choi (Fighting Cock Islet)
+
+In the center of Ha Long Bay, two jagged rock formations jut out more than 12 meters over the water’s surface, leaning in towards one another for a fight or for a kiss, depending on who you ask. Whether you call it Fighting Cocks Island or Cock and Hen Island (Hon Ga Choi or Hon Trong Mai), it’s one of the region’s best-known landmarks. The scale and precariousness of the formations are striking on their own, but the rocks are at their best at sunrise and sunset when the sky casts the improbable characters into stark silhouettes.
+
+All the rock formations of Ha Long Bay have been shifting and evolving over hundreds of millions of years, engaged in a full-contact dance with the dynamic power of the ocean’s shaping waves. This history helps us remember that time and water are sculptors, too. Perhaps that’s why so many artists have followed suit and taken decades of creative inspiration from what nature has carved out in Ha Long Bay.
+
+- You are here:
+
+- Home
+
+- Things to do
+
+- What to Do in Ha Long Bay
+
+## oops
+
+The entered email has subscribed for Vietnam Tourism monthly newsletter

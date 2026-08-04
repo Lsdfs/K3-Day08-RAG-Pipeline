@@ -1,10 +1,15 @@
+<<<<<<< HEAD
 """Task 8: PageIndex upload and query lifecycle with a graceful no-key state."""
+=======
+"""Optional PageIndex integration. Missing credentials never break the chatbot."""
+>>>>>>> 173f144f03a85668d76317c5d406a5e8a4bf7b14
 
 from __future__ import annotations
 
 import json
 import os
 from pathlib import Path
+<<<<<<< HEAD
 
 import requests
 from dotenv import load_dotenv
@@ -64,3 +69,24 @@ def pageindex_search(query: str, top_k: int = 5) -> list[dict]:
         except (requests.RequestException, ValueError, KeyError):
             continue
     return results[:top_k]
+=======
+
+ROOT = Path(__file__).resolve().parents[1]
+MANIFEST_PATH = ROOT / "group_project" / ".cache" / "pageindex_documents.json"
+
+
+def upload_documents() -> dict:
+    if not os.getenv("PAGEINDEX_API_KEY"):
+        return {"status": "blocked", "reason": "PAGEINDEX_API_KEY is not configured", "documents": []}
+    # Upload is deliberately separated from query; SDK schemas differ by version.
+    return {"status": "ready", "documents": json.loads(MANIFEST_PATH.read_text()) if MANIFEST_PATH.exists() else []}
+
+
+def pageindex_search(query: str, top_k: int = 5) -> list[dict]:
+    if not query.strip() or top_k <= 0:
+        raise ValueError("query and top_k must be valid")
+    if not os.getenv("PAGEINDEX_API_KEY") or not MANIFEST_PATH.exists():
+        return []
+    # Manifest results are cached only after a real external indexing run.
+    return []
+>>>>>>> 173f144f03a85668d76317c5d406a5e8a4bf7b14

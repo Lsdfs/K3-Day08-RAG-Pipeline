@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """Task 1: download verified university-service documents."""
 
 from __future__ import annotations
@@ -8,8 +9,13 @@ import logging
 import re
 import unicodedata
 from datetime import datetime, timezone
+=======
+"""Task 1: Download public RMIT Vietnam policy documents."""
+>>>>>>> 173f144f03a85668d76317c5d406a5e8a4bf7b14
 from pathlib import Path
+import requests
 
+<<<<<<< HEAD
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
@@ -52,8 +58,28 @@ LOG = logging.getLogger(__name__)
 def setup_directory() -> Path:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     return DATA_DIR
+=======
+DATA_DIR = Path(__file__).parent.parent / "data" / "landing" / "legal"
+LEGAL_DOCUMENTS = {
+    "student-fees-and-charges-guide-rmit-2026.pdf": "https://www.rmit.edu.vn/assets/vn/en/assets-for-production/documents/pdfs/study-at-rmit/tuition-fees/student-fees-and-charges-guide-06-2026.pdf",
+    "scholarship-terms-and-conditions-rmit.pdf": "https://www.rmit.edu.vn/content/dam/rmit/vn/en/assets-for-production/documents/pdfs/study-at-rmit/scholarships/english-pdf/rmit-university-vietnam-scholarship-terms-and-conditions.pdf",
+    "international-student-predeparture-guide-rmit.pdf": "https://www.rmit.edu.vn/content/dam/rmit/vn/en/assets-for-production/documents/pdfs/study-at-rmit/international-students/pre-departure-guide-for-study-abroad-students.pdf",
+}
 
+def setup_directory():
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+>>>>>>> 173f144f03a85668d76317c5d406a5e8a4bf7b14
 
+def download_file(url, filename):
+    response = requests.get(url, timeout=60, headers={"User-Agent": "Mozilla/5.0 (educational RAG lab)"})
+    response.raise_for_status()
+    if not response.content.startswith(b"%PDF") or len(response.content) <= 1024:
+        raise ValueError(f"Invalid PDF response from {url}")
+    path = DATA_DIR / filename
+    path.write_bytes(response.content)
+    return path
+
+<<<<<<< HEAD
 def safe_filename(value: str) -> str:
     value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode()
     value = re.sub(r"[^a-zA-Z0-9._-]+", "-", value).strip(".-").lower()
@@ -118,3 +144,11 @@ if __name__ == "__main__":
     done = collect_all()
     print(json.dumps({"successful": sum(r["status"] in {"success", "skipped_duplicate"} for r in done),
                       "failed": sum(r["status"] == "failed" for r in done)}, indent=2))
+=======
+def collect_all():
+    setup_directory()
+    return [download_file(url, name) for name, url in LEGAL_DOCUMENTS.items()]
+
+if __name__ == "__main__":
+    collect_all()
+>>>>>>> 173f144f03a85668d76317c5d406a5e8a4bf7b14
