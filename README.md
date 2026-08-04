@@ -1,19 +1,8 @@
----
-title: University Services RAG Chatbot
-emoji: 🎓
-colorFrom: blue
-colorTo: indigo
-sdk: streamlit
-sdk_version: "1.35.0"
-app_file: app.py
-pinned: false
----
-
-# Ngày 8 — RAG Pipeline v2
+# Ngày 8 — Hạ Long Travel RAG Pipeline
 
 **Chương 2 | Ngày 8 trong 15**
 
-> Dùng chung chủ đề "University Services" với biến thể K3 của Ngày 7 (`K3_VARIANT.md`), để pipeline Ngày 7 → Ngày 8 nhất quán.
+> Chatbot web khai thác kho tư liệu về Vịnh Hạ Long, gồm tài liệu về cảnh quan, giá trị tự nhiên và địa chất.
 
 ---
 
@@ -25,7 +14,7 @@ Xây dựng một RAG pipeline thực tế, end-to-end, từ thu thập dữ li�
 
 ## Chủ Đề Dữ Liệu
 
-**Chính sách/quy định dịch vụ đại học** (học phí, học bổng, ký túc xá, đăng ký học phần) + **Thông tin/thông báo đại học** (sự kiện, dịch vụ thư viện, hỗ trợ sinh viên)
+**Tư liệu du lịch và giá trị tự nhiên Vịnh Hạ Long** (cảnh quan, địa chất, lịch sử hình thành và trải nghiệm tham quan).
 
 Dữ liệu mẫu trong repo được crawl thật từ trang công khai của **RMIT Vietnam** (rmit.edu.vn) — xem chi tiết URL nguồn trong `src/task1_collect_legal_docs.py` và `src/task2_crawl_news.py`.
 
@@ -38,7 +27,8 @@ K3-Day08-RAG-Pipeline-Starter/
 ├── README.md
 ├── LAB_GUIDE.md           ← Hướng dẫn chi tiết & Codelab
 ├── checkpoint_timer.html  ← Dashboard đếm ngược Checkpoint & Phân vai
-├── app.py                 ← Streamlit chatbot (bài nhóm)
+├── app.py                 ← Flask web server cho chatbot (bài nhóm)
+├── web/                   ← Giao diện HTML/CSS/JavaScript phong cách biển cả
 ├── data/
 │   ├── landing/           ← Task 1 & 2: raw files (PDF, JSON)
 │   └── standardized/      ← Task 3: converted markdown files
@@ -390,14 +380,14 @@ def generate_with_citation(query: str, context_chunks: list[dict]) -> str:
 Xây dựng chatbot trả lời câu hỏi về chính sách và dịch vụ đại học liên quan.
 
 **Yêu cầu:**
-- Giao diện chat (Streamlit / Gradio / Chainlit)
+- Giao diện chat web (HTML/CSS/JavaScript + Flask)
 - Trả lời có citation (dựa trên Task 10)
 - Hỗ trợ follow-up questions (conversation memory)
 - Hiển thị source documents đã dùng
 
 **Stack gợi ý:**
 ```
-Chainlit/Streamlit → Retrieval (Task 9) → Generation (Task 10) → Display
+Web UI → Flask API → Retrieval (Task 9) → Generation (Task 10) → Display
 ```
 
 ---
@@ -572,10 +562,9 @@ run_dashboard()
 # Cài đặt dependencies
 pip install -r requirements.txt
 
-# Chạy app
-streamlit run app.py
-# hoặc
-chainlit run app.py
+# Chạy web app
+python app.py
+# Mở http://127.0.0.1:8000
 ```
 
 ---
