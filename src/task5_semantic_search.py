@@ -1,38 +1,52 @@
-"""Task 5 — Semantic Search (dense retrieval)."""
+"""Task 5 — Dense retrieval with a dependency-free lexical-semantic fallback."""
 
-from .task4_chunking_indexing import get_embedder, get_collection, get_chunks
+from __future__ import annotations
+
+import re
+
+from .task4_chunking_indexing import get_chunks, get_collection, get_embedder
+
+
+def _tokens(text: str) -> set[str]:
+    return set(re.findall(r"[\wÀ-ỹ]+", text.lower()))
+
+
+QUERY_EXPANSIONS = {
+    "unesco": ("di san thien nhien the gioi", "world heritage"),
+    "dao": ("hon dao", "dao da voi"),
+    "hang": ("hang dong", "karst"),
+    "dia chat": ("karst", "da voi", "kien tao"),
+    "o nhiem": ("moi truong", "chat luong nuoc", "e.coli"),
+    "cat ba": ("dao cat ba", "khu du tru sinh quyen"),
+}
+
+
+def expand_query(query: str) -> str:
+    """Expand common Ha Long aliases to improve recall without an LLM call."""
+    lowered = query.lower()
+    additions = [term for trigger, terms in QUERY_EXPANSIONS.items()
+                 if trigger in lowered for term in terms]
+    return " ".join([query, *additions])
 
 
 def semantic_search(query: str, top_k: int = 10) -> list[dict]:
-    embedder = get_embedder()
-    query_emb = embedder.encode([query], normalize_embeddings=True)[0].tolist()
-    collection = get_collection()
+    """Return relevant chunks sorted descending, using embeddings when indexed."""
+    query = expand_query(query)
+    collection, embedder = get_collection(), get_embedder()
+    if collection is not None and embedder is not None:
+        vector = embedder.encode([query], normalize_embeddings=True)[0].tolist()
+        result = collection.query(query_embeddings=[vector], n_results=top_k,
+                                  include=["documents", "metadatas", "distances"])
+        return sorted([
+            {"content": doc, "score": max(0.0, 1 - distance), "metadata": meta or {}, "source": "semantic"}
+            for doc, meta, distance in zip(result["documents"][0], result["metadatas"][0], result["distances"][0])
+        ], key=lambda item: item["score"], reverse=True)
 
-    if collection is not None:
-        results = collection.query(query_embeddings=[query_emb], n_results=top_k,
-                                   include=["documents", "metadatas", "distances"])
-        output = []
-        for i in range(len(results["ids"][0])):
-            dist = results["distances"][0][i]
-            score = 1.0 - dist
-            output.append({
-                "content": results["documents"][0][i],
-                "score": score,
-                "metadata": results["metadatas"][0][i] if results["metadatas"][0] else {},
-                "source": "semantic",
-            })
-        return sorted(output, key=lambda x: x["score"], reverse=True)
-
-    # In-memory fallback
-    chunks = get_chunks()
-    scored = []
-    for c in chunks:
-        emb = c.get("embedding", [])
-        if emb:
-            dot = sum(qe * e for qe, e in zip(query_emb, emb))
-            scored.append((dot, c))
-    scored.sort(key=lambda x: x[0], reverse=True)
-    return [
-        {"content": c["content"], "score": s, "metadata": c.get("metadata", {}), "source": "semantic"}
-        for s, c in scored[:top_k]
-    ]
+    query_tokens = _tokens(query)
+    results = []
+    for chunk in get_chunks():
+        chunk_tokens = _tokens(chunk["content"])
+        score = len(query_tokens & chunk_tokens) / max(len(query_tokens), 1)
+        results.append({"content": chunk["content"], "score": score,
+                        "metadata": chunk.get("metadata", {}), "source": "semantic"})
+    return sorted(results, key=lambda item: item["score"], reverse=True)[:top_k]

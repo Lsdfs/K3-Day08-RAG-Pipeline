@@ -1,105 +1,101 @@
-# Bài Tập Nhóm — University Services RAG Chatbot
+# Hạ Long Travel RAG Chatbot
 
-## Mục Tiêu
+Chatbot hỏi đáp tiếng Việt trên kho tư liệu Vịnh Hạ Long. Hệ thống kết hợp
+dense retrieval, BM25, RRF/reranking, fallback vectorless, sinh câu trả lời có
+citation, conversation memory và giao diện web hiển thị nguồn/điểm số.
 
-Sau khi hoàn thành bài cá nhân, nhóm ngồi lại để xây dựng **1 trong 2 sản phẩm**:
+## Kiến trúc
 
----
-
-## Yêu cầu 1: Sản phẩm nhóm RAG Chatbot
-
-Xây dựng chatbot trả lời câu hỏi về dịch vụ và chính sách đại học liên quan.
-
-**Yêu cầu:**
-- Giao diện chat (Streamlit / Gradio / Chainlit)
-- Trả lời có citation (dựa trên Task 10)
-- Hỗ trợ follow-up questions (conversation memory)
-- Hiển thị source documents đã dùng
-
-**Stack gợi ý:**
-```
-Chainlit/Streamlit → Retrieval (Task 9) → Generation (Task 10) → Display
-```
-
----
-
-## Yêu cầu 2: RAG Evaluation Pipeline
-
-Sử dụng **1 trong 3 framework** sau để evaluate pipeline RAG của nhóm:
-
-### Framework lựa chọn
-
-| Framework | Cài đặt | Đặc điểm |
-|-----------|---------|-----------|
-| [DeepEval](https://github.com/confident-ai/deepeval) | `pip install deepeval` | Nhiều metric built-in, dễ integrate với pytest |
-| [RAGAS](https://github.com/explodinggradients/ragas) | `pip install ragas` | Chuẩn industry cho RAG eval, 3 trục chính |
-| [TruLens](https://github.com/truera/trulens) | `pip install trulens` | Dashboard UI, feedback functions mạnh |
-
-### Yêu cầu Evaluation
-
-1. **Tạo Golden Dataset** — tối thiểu 15 cặp Q&A (question, expected_answer, expected_context)
-2. **Chạy evaluation** trên toàn bộ golden dataset với các metrics sau:
-   - **Faithfulness** — câu trả lời có bám đúng context không?
-   - **Answer Relevance** — câu trả lời có đúng câu hỏi không?
-   - **Context Recall** — retriever có lấy đủ evidence không?
-   - **Context Precision** — trong context lấy về, bao nhiêu % thực sự hữu ích?
-3. **So sánh A/B** — chạy eval trên ít nhất 2 config khác nhau (ví dụ: có reranking vs không reranking, hoặc hybrid vs dense-only)
-4. **Báo cáo** — bảng điểm + phân tích worst performers + đề xuất cải tiến
-
-Xem code mẫu (DeepEval/RAGAS/TruLens) chi tiết trong `README.md` gốc mục "Yêu cầu 2".
-
-### Deliverable Evaluation
-
-- [ ] File `group_project/evaluation/golden_dataset.json` — 15+ cặp Q&A
-- [ ] File `group_project/evaluation/eval_pipeline.py` — script chạy evaluation
-- [ ] File `group_project/evaluation/results.md` — bảng điểm + phân tích
-- [ ] So sánh A/B ít nhất 2 configs
-
----
-
-## Yêu Cầu Chung
-
-1. **Tích hợp pipeline** từ bài cá nhân của các thành viên
-2. **Demo hoạt động được** trong buổi trình bày (chạy local hoặc deploy)
-3. **Evaluation pipeline** chạy được và có báo cáo kết quả
-4. **Code push lên repository** chung của nhóm
-5. **README** mô tả kiến trúc và phân công (điền bên dưới)
-
----
-
-## Kiến Trúc Hệ Thống
-
-```
-[Vẽ diagram kiến trúc ở đây]
+```text
+Browser (HTML/CSS/JS)
+  ├─ history + follow-up questions
+  └─ POST /api/chat
+          │
+          ▼
+Flask API (app.py)
+          │
+          ▼
+Generation + citations (Task 10)
+          │
+          ▼
+Retrieval pipeline (Task 9)
+  ├─ Semantic search (Task 5) ─┐
+  ├─ BM25 lexical (Task 6) ────┼─ RRF + rerank (Task 7)
+  └─ low dense score ──────────┘
+             └─ PageIndex API / local vectorless fallback (Task 8)
+          │
+          ▼
+Markdown corpus → chunks → ChromaDB (Tasks 3–4)
 ```
 
----
+## Thành phần
 
-## Phân Công Công Việc
+| Thành phần | File | Trạng thái |
+|---|---|---|
+| Thu thập PDF và bài viết | `src/task1_*`, `src/task2_*` | Hoàn thành |
+| Chuẩn hóa Markdown | `src/task3_convert_markdown.py` | Hoàn thành |
+| Chunking/indexing | `src/task4_chunking_indexing.py` | Hoàn thành |
+| Dense + lexical retrieval | `src/task5_*`, `src/task6_*` | Hoàn thành |
+| Rerank + fallback + pipeline | `src/task7_*` đến `src/task9_*` | Hoàn thành |
+| Generation/citation/memory | `src/task10_generation.py` | Hoàn thành |
+| Flask UI và source cards | `app.py`, `web/` | Hoàn thành |
+| Evaluation 4 metrics và A/B | `evaluation/` | Hoàn thành |
 
-| Thành viên | MSSV | Nhiệm vụ | Trạng thái |
-|-----------|------|----------|------------|
-| | | | |
-| | | | |
-| | | | |
-| | | | |
+## Phân công
 
----
+Repo được tích hợp từ các nhánh thành viên; cần thay tên/MSSV bên dưới bằng
+thông tin chính thức trước khi nộp nếu giảng viên yêu cầu MSSV.
 
-## Hướng Dẫn Chạy
+| Thành viên/nhánh | Nhiệm vụ | Trạng thái |
+|---|---|---|
+| DinhKhoa | Data, conversion, chunking/indexing | Hoàn thành |
+| vietnguyen | Corpus Hạ Long, index và golden dataset | Hoàn thành |
+| zoanh | Flask UI/UX, memory và source display | Hoàn thành |
+| Chu Thi Yen Khanh | Integration, retrieval, generation và evaluation | Hoàn thành |
 
-```bash
-# Cài đặt dependencies
+## Chạy dự án
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-
-# Chạy app
-streamlit run app.py
-# hoặc
-chainlit run app.py
+Copy-Item .env.example .env
+python app.py
 ```
 
----
+Mở <http://127.0.0.1:8000>. Không có API key, chatbot vẫn trả lời extractive
+có citation. Muốn dùng LLM, đặt `ENABLE_LLM_GENERATION=1` và cấu hình
+`OPENROUTER_API_KEY` hoặc `OPENAI_API_KEY`.
 
-## Lưu ý
+## Kiểm thử và evaluation
 
-Hãy giữ lại repo này nếu như bạn học track 3 giai đoạn 2, chúng ta sẽ phát triển tiếp dự án lên knowledge graph để khắc phục các câu hỏi hóc búa khi có các câu hỏi khó.
+```powershell
+python -m pytest tests -v
+python group_project/evaluation/eval_pipeline.py
+```
+
+Evaluation dùng 20 golden cases, bốn metrics (Faithfulness, Answer Relevance,
+Context Recall, Context Precision) và so sánh:
+
+- Config A: hybrid retrieval + reranking.
+- Config B: dense-only retrieval.
+
+Kết quả, phân tích ba trường hợp kém nhất và recommendations nằm trong
+[`evaluation/results.md`](evaluation/results.md).
+
+## Biến môi trường
+
+| Biến | Mục đích | Bắt buộc |
+|---|---|---|
+| `ENABLE_LLM_GENERATION` | Bật sinh câu trả lời bằng LLM | Không |
+| `OPENROUTER_API_KEY` / `OPENAI_API_KEY` | LLM generation | Không |
+| `PAGEINDEX_API_KEY` | PageIndex remote fallback | Chỉ khi demo API thật |
+| `PAGEINDEX_DOC_ID` | Document đã upload trên PageIndex | Chỉ khi demo API thật |
+
+## Hạn chế đã biết
+
+- Chất lượng một số đoạn PDF chịu ảnh hưởng bởi OCR.
+- Khi không có embedding dependencies/index, semantic module dùng fallback
+  lexical-semantic để ứng dụng vẫn demo được.
+- PageIndex remote cần tài khoản, API key và document đã upload; local fallback
+  giữ pipeline hoạt động khi không có credential.
