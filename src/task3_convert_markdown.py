@@ -1,12 +1,17 @@
 """Task 3: Convert landing documents to Markdown."""
 import json
 from pathlib import Path
-from markitdown import MarkItDown
 
 LANDING_DIR = Path(__file__).parent.parent / "data" / "landing"
 OUTPUT_DIR = Path(__file__).parent.parent / "data" / "standardized"
 
 def convert_legal_docs():
+    try:
+        from markitdown import MarkItDown
+    except ImportError as exc:
+        raise RuntimeError(
+            'PDF conversion requires: pip install "markitdown[pdf]"'
+        ) from exc
     source, target = LANDING_DIR / "legal", OUTPUT_DIR / "legal"
     target.mkdir(parents=True, exist_ok=True)
     converter, saved = MarkItDown(), []
@@ -34,7 +39,11 @@ def convert_news_articles():
     return saved
 
 def convert_all():
-    return convert_legal_docs() + convert_news_articles()
+    # JSON conversion has no optional dependency, so do it first. This also
+    # preserves useful output if the PDF extra is not installed yet.
+    saved = convert_news_articles()
+    saved.extend(convert_legal_docs())
+    return saved
 
 if __name__ == "__main__":
     convert_all()
