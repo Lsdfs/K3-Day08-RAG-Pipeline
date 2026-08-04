@@ -1,14 +1,6 @@
 """
 Task 5 — Semantic Search Module.
-
-Viết module tìm kiếm ngữ nghĩa (dense retrieval) trên vector store.
-
-Yêu cầu:
-    - Input: query string + top_k
-    - Output: danh sách chunks có score, sorted descending
-    - Phải tương thích với embedding model và vector store ở Task 4
 """
-
 
 def semantic_search(query: str, top_k: int = 10) -> list[dict]:
     """
@@ -26,39 +18,55 @@ def semantic_search(query: str, top_k: int = 10) -> list[dict]:
         }
         Sorted by score descending.
     """
-    # TODO: Implement semantic search
-    #
-    # Bước 1: Embed query bằng cùng model ở Task 4
-    # Bước 2: Query vector store (cosine similarity)
-    # Bước 3: Return top_k results
-    #
-    # Ví dụ với ChromaDB:
-    # from .task4_chunking_indexing import get_collection, get_embedding_model
-    #
-    # model = get_embedding_model()
-    # query_vector = model.encode(query).tolist()
-    #
-    # collection = get_collection()
-    # results = collection.query(
-    #     query_embeddings=[query_vector],
-    #     n_results=top_k,
-    #     include=["documents", "metadatas", "distances"],
-    # )
-    #
-    # output = []
-    # for doc, meta, dist in zip(
-    #     results["documents"][0], results["metadatas"][0], results["distances"][0]
-    # ):
-    #     score = max(0.0, 1.0 - dist)  # cosine distance → similarity
-    #     output.append({"content": doc, "score": round(score, 4), "metadata": meta})
-    #
-    # output.sort(key=lambda x: x["score"], reverse=True)
-    # return output[:top_k]
-    raise NotImplementedError("Implement semantic_search")
+    import chromadb
+    import os
+    from dotenv import load_dotenv
+    from openai import OpenAI
+    
+    load_dotenv()
+    try:
+        from src.task4_chunking_indexing import CHROMA_DIR, COLLECTION_NAME, EMBEDDING_MODEL
+    except ModuleNotFoundError:
+        from task4_chunking_indexing import CHROMA_DIR, COLLECTION_NAME, EMBEDDING_MODEL
+    
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise ValueError("OPENAI_API_KEY is not set in environment or .env file")
+        
+    client = OpenAI(api_key=api_key)
+    
+    # Embed query bằng OpenAI
+    response = client.embeddings.create(
+        model=EMBEDDING_MODEL,
+        input=[query]
+    )
+    query_vector = response.data[0].embedding
+    
+    client_db = chromadb.PersistentClient(path=str(CHROMA_DIR))
+    collection = client_db.get_or_create_collection(
+        name=COLLECTION_NAME,
+        metadata={"hnsw:space": "cosine"},
+    )
+    
+    results = collection.query(
+        query_embeddings=[query_vector],
+        n_results=top_k,
+        include=["documents", "metadatas", "distances"],
+    )
+    
+    output = []
+    if results["documents"] and results["documents"][0]:
+        for doc, meta, dist in zip(
+            results["documents"][0], results["metadatas"][0], results["distances"][0]
+        ):
+            score = max(0.0, 1.0 - dist)  # cosine distance → similarity
+            output.append({"content": doc, "score": round(score, 4), "metadata": meta})
+            
+    output.sort(key=lambda x: x["score"], reverse=True)
+    return output[:top_k]
 
 
 if __name__ == "__main__":
-    # Test
-    results = semantic_search("what is the tuition fee", top_k=5)
+    results = semantic_search("what to do in Ha Long Bay", top_k=5)
     for r in results:
         print(f"[{r['score']:.3f}] {r['content'][:100]}...")
