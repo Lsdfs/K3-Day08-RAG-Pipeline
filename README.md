@@ -9,6 +9,10 @@ app_file: app.py
 pinned: false
 ---
 
+**Demo online:** [https://ha-long-rag-chatbot.onrender.com/](https://ha-long-rag-chatbot.onrender.com/)
+
+**Health check:** [https://ha-long-rag-chatbot.onrender.com/api/health](https://ha-long-rag-chatbot.onrender.com/api/health)
+
 # Ngày 8 — RAG Pipeline v2
 
 **Chương 2 | Ngày 8 trong 15**

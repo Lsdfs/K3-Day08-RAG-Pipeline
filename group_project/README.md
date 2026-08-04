@@ -1,5 +1,9 @@
 # Hạ Long Travel RAG Chatbot
 
+**Demo online:** [https://ha-long-rag-chatbot.onrender.com/](https://ha-long-rag-chatbot.onrender.com/)
+
+**Health check:** [https://ha-long-rag-chatbot.onrender.com/api/health](https://ha-long-rag-chatbot.onrender.com/api/health)
+
 Chatbot hỏi đáp tiếng Việt trên kho tư liệu Vịnh Hạ Long. Hệ thống kết hợp
 dense retrieval, BM25, RRF/reranking, fallback vectorless, sinh câu trả lời có
 citation, conversation memory và giao diện web hiển thị nguồn/điểm số.
@@ -81,6 +85,15 @@ Context Recall, Context Precision) và so sánh:
 
 Kết quả, phân tích ba trường hợp kém nhất và recommendations nằm trong
 [`evaluation/results.md`](evaluation/results.md).
+
+## Bonus: lexical search khác BM25
+
+Ngoài BM25, `task6_lexical_search.py` có **token-overlap fallback** không cần thư
+viện: chuẩn hóa câu hỏi và tài liệu thành tập token, đếm số token giao nhau,
+sau đó chuẩn hóa theo điểm lớn nhất và sắp xếp giảm dần. Khác BM25, phương pháp
+này không dùng IDF, term saturation hay document-length normalization; ưu điểm
+là nhẹ và luôn chạy offline, nhược điểm là từ phổ biến có trọng số ngang từ
+hiếm. Trong demo có thể gỡ `rank-bm25` hoặc gọi fallback để so sánh kết quả.
 
 ## Deploy trên Render
 
