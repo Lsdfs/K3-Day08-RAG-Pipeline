@@ -1,157 +1,148 @@
+"""Task 4 — Load, chunk and optionally index the Hạ Long knowledge base.
+
+Recursive character chunks keep paragraphs intact where possible. 800 characters
+with 120 characters overlap is small enough for retrieval and preserves context
+across paragraph boundaries.
 """
-Task 4 — Chunking & Indexing vào Vector Store.
-"""
+
+from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
+import hashlib
 import os
-from dotenv import load_dotenv
-load_dotenv()
+import re
 
-STANDARDIZED_DIR = Path(__file__).parent.parent / "data" / "standardized"
-CHROMA_DIR = Path(__file__).parent.parent / "chroma_db"
 
-# =============================================================================
-# CONFIGURATION
-# =============================================================================
-
-# CHUNK_SIZE = 800 và CHUNK_OVERLAP = 100: Kích thước 800 ký tự là tối ưu để chứa đủ ngữ cảnh
-# của một điều khoản pháp lý hoặc đoạn tin tức ngắn, trong khi overlap 100 tránh mất mát thông tin ở ranh giới.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+STANDARDIZED_DIR = PROJECT_ROOT / "data" / "standardized"
+CHROMA_DIR = PROJECT_ROOT / "chroma_db"
+COLLECTION_NAME = "halong_knowledge_base"
+EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+EMBEDDING_DIMENSION = 384
 CHUNK_SIZE = 800
-CHUNK_OVERLAP = 100
-CHUNKING_METHOD = "recursive"  # Dùng RecursiveCharacterTextSplitter để phân đoạn văn bản linh hoạt và an toàn.
+CHUNK_OVERLAP = 120
 
-# Sử dụng OpenAI API Key của bạn
-EMBEDDING_MODEL = "text-embedding-3-small"
-EMBEDDING_DIM = 1536
-
-# VECTOR_STORE = "chromadb": Hệ quản trị CSDL vector mã nguồn mở, đơn giản, hỗ trợ persistent lưu trữ local.
-VECTOR_STORE = "chromadb"
-COLLECTION_NAME = "university_services_docs"
+_chunks_cache: list[dict[str, Any]] | None = None
+_collection = None
+_embedder = None
 
 
-# =============================================================================
-# IMPLEMENTATION
-# =============================================================================
-
-def load_documents() -> list[dict]:
-    """
-    Đọc toàn bộ markdown files từ data/standardized/.
-
-    Returns:
-        List of {'content': str, 'metadata': {'source': str, 'type': str}}
-    """
+def load_documents(data_dir: Path = STANDARDIZED_DIR) -> list[dict[str, Any]]:
+    """Read standardised Markdown files and retain provenance for citations."""
     documents = []
-    for md_file in STANDARDIZED_DIR.rglob("*.md"):
-        content = md_file.read_text(encoding="utf-8")
-        doc_type = "legal" if "legal" in str(md_file) else "news"
+    if not data_dir.exists():
+        return documents
+    for path in sorted(data_dir.rglob("*.md")):
+        if path.name.startswith("."):
+            continue
+        content = path.read_text(encoding="utf-8", errors="ignore").strip()
+        if not content:
+            continue
+        relative = path.relative_to(data_dir)
         documents.append({
             "content": content,
-            "metadata": {"source": md_file.name, "type": doc_type}
+            "metadata": {
+                "source": path.stem,
+                "filename": path.name,
+                "type": relative.parts[0] if len(relative.parts) > 1 else "document",
+                "path": str(relative).replace("\\", "/"),
+            },
         })
     return documents
 
 
-def chunk_documents(documents: list[dict]) -> list[dict]:
-    """
-    Chunk documents theo strategy đã chọn.
+def _split_text(text: str) -> list[str]:
+    """Split on paragraph/sentence boundaries before falling back to characters."""
+    blocks = re.split(r"(?<=\n)\s*\n+", text)
+    chunks, current = [], ""
+    for block in blocks:
+        block = block.strip()
+        if not block:
+            continue
+        if len(block) > CHUNK_SIZE:
+            if current:
+                chunks.append(current)
+                current = ""
+            for start in range(0, len(block), CHUNK_SIZE - CHUNK_OVERLAP):
+                chunks.append(block[start:start + CHUNK_SIZE])
+            continue
+        candidate = f"{current}\n\n{block}".strip() if current else block
+        if len(candidate) <= CHUNK_SIZE:
+            current = candidate
+        else:
+            chunks.append(current)
+            current = (current[-CHUNK_OVERLAP:] + "\n" + block).strip()
+    if current:
+        chunks.append(current)
+    return chunks
 
-    Returns:
-        List of {'content': str, 'metadata': dict} — mỗi item là 1 chunk
-    """
-    from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=CHUNK_SIZE,
-        chunk_overlap=CHUNK_OVERLAP,
-        separators=["\n\n", "\n", ". ", " ", ""]
-    )
+def chunk_documents(documents: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Create character-bounded chunks while carrying document metadata."""
     chunks = []
-    for doc in documents:
-        splits = splitter.split_text(doc["content"])
-        for i, chunk_text in enumerate(splits):
-            chunks.append({
-                "content": chunk_text,
-                "metadata": {**doc["metadata"], "chunk_index": i}
-            })
+    for document in documents:
+        for index, content in enumerate(_split_text(document["content"])):
+            metadata = dict(document.get("metadata", {}))
+            metadata["chunk_index"] = index
+            chunks.append({"content": content, "metadata": metadata})
     return chunks
 
 
-def embed_chunks(chunks: list[dict]) -> list[dict]:
-    """
-    Embed toàn bộ chunks bằng OpenAI API.
+def get_embedder():
+    """Load embeddings only when explicitly enabled, never downloading during chat."""
+    global _embedder
+    if _embedder is not None:
+        return _embedder
+    # A first-time SentenceTransformer download can take minutes or hang on a
+    # restricted network. The lightweight local retrieval path is the default
+    # for a reliable web demo; set ENABLE_LOCAL_EMBEDDINGS=1 after pre-downloading
+    # the model to use Chroma semantic vectors instead.
+    if os.getenv("ENABLE_LOCAL_EMBEDDINGS", "0").lower() not in {"1", "true", "yes"}:
+        _embedder = False
+        return None
+    try:
+        from sentence_transformers import SentenceTransformer
+        _embedder = SentenceTransformer(EMBEDDING_MODEL, local_files_only=True)
+    except Exception:
+        _embedder = False
+    return _embedder if _embedder is not False else None
 
-    Returns:
-        Mỗi chunk dict được thêm key 'embedding': list[float]
-    """
-    from openai import OpenAI
-    
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise ValueError("OPENAI_API_KEY is not set in environment or .env file")
-    
-    client = OpenAI(api_key=api_key)
-    texts = [c["content"] for c in chunks]
-    
-    # Batch embeddings to avoid hitting limits
-    batch_size = 500
-    all_embeddings = []
-    for i in range(0, len(texts), batch_size):
-        batch_texts = texts[i:i+batch_size]
-        response = client.embeddings.create(
-            model=EMBEDDING_MODEL,
-            input=batch_texts
+
+def build_index(chunks: list[dict[str, Any]] | None = None) -> int:
+    """Persist embeddings to Chroma when optional dependencies are installed."""
+    global _collection, _chunks_cache
+    _chunks_cache = chunks or get_chunks()
+    embedder = get_embedder()
+    if not _chunks_cache or embedder is None:
+        return len(_chunks_cache)
+    try:
+        import chromadb
+        CHROMA_DIR.mkdir(parents=True, exist_ok=True)
+        client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+        try:
+            client.delete_collection(COLLECTION_NAME)
+        except Exception:
+            pass
+        _collection = client.create_collection(COLLECTION_NAME, metadata={"hnsw:space": "cosine"})
+        embeddings = embedder.encode([c["content"] for c in _chunks_cache], normalize_embeddings=True).tolist()
+        _collection.add(
+            ids=[f"chunk_{i}" for i in range(len(_chunks_cache))],
+            documents=[c["content"] for c in _chunks_cache],
+            embeddings=embeddings,
+            metadatas=[c["metadata"] for c in _chunks_cache],
         )
-        all_embeddings.extend([data.embedding for data in response.data])
-        
-    for chunk, emb in zip(chunks, all_embeddings):
-        chunk["embedding"] = emb
-        
-    return chunks
+    except Exception:
+        _collection = None
+    return len(_chunks_cache)
 
 
-def index_to_vectorstore(chunks: list[dict]):
-    """
-    Lưu chunks vào vector store đã chọn.
-    """
-    import chromadb
-
-    CHROMA_DIR.mkdir(parents=True, exist_ok=True)
-    client = chromadb.PersistentClient(path=str(CHROMA_DIR))
-    collection = client.get_or_create_collection(
-        name=COLLECTION_NAME,
-        metadata={"hnsw:space": "cosine"},
-    )
-
-    ids = [f"{c['metadata']['source']}_chunk_{c['metadata']['chunk_index']}" for c in chunks]
-    collection.upsert(
-        ids=ids,
-        documents=[c["content"] for c in chunks],
-        embeddings=[c["embedding"] for c in chunks],
-        metadatas=[c["metadata"] for c in chunks],
-    )
+def get_collection():
+    return _collection
 
 
-def run_pipeline():
-    """Chạy toàn bộ pipeline: load → chunk → embed → index."""
-    print("=" * 50)
-    print("Task 4: Chunking & Indexing")
-    print(f"  Chunking: {CHUNKING_METHOD} (size={CHUNK_SIZE}, overlap={CHUNK_OVERLAP})")
-    print(f"  Embedding: {EMBEDDING_MODEL} (dim={EMBEDDING_DIM})")
-    print(f"  Vector Store: {VECTOR_STORE}")
-    print("=" * 50)
-
-    docs = load_documents()
-    print(f"\n✓ Loaded {len(docs)} documents")
-
-    chunks = chunk_documents(docs)
-    print(f"✓ Created {len(chunks)} chunks")
-
-    chunks = embed_chunks(chunks)
-    print(f"✓ Embedded {len(chunks)} chunks")
-
-    index_to_vectorstore(chunks)
-    print("✓ Indexed to vector store")
-
-
-if __name__ == "__main__":
-    run_pipeline()
+def get_chunks() -> list[dict[str, Any]]:
+    global _chunks_cache
+    if _chunks_cache is None:
+        _chunks_cache = chunk_documents(load_documents())
+    return _chunks_cache

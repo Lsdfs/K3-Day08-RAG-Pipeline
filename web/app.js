@@ -4,6 +4,12 @@ const input = document.querySelector('#message');
 const send = document.querySelector('#send');
 const topK = document.querySelector('#topK');
 const topKValue = document.querySelector('#topKValue');
+let history = [];
+// When index.html is double-clicked, its origin is file:// and relative fetch()
+// cannot find Flask. In that case, use the standard local server explicitly.
+const apiUrl = window.location.protocol === 'file:'
+  ? 'http://127.0.0.1:8000/api/chat'
+  : '/api/chat';
 
 const escapeHtml = (text = '') => String(text).replace(/[&<>'"]/g, char => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[char]));
 function scrollDown() { chat.scrollTop = chat.scrollHeight; }
@@ -33,19 +39,28 @@ function addSources(sources) {
 function resetChat() {
   chat.innerHTML = `<article class="message assistant welcome"><div class="avatar">✦</div><div class="bubble"><p class="greeting">Một hải trình mới bắt đầu.</p><p>Mình sẵn sàng giúp bạn khám phá kho tư liệu về Vịnh Hạ Long.</p></div></article>`;
   input.focus();
+  history = [];
 }
 async function submitQuestion(question) {
   const message = question.trim(); if (!message) return;
   addMessage('user', message); input.value = ''; input.style.height = 'auto'; send.disabled = true;
+  history.push({ role: 'user', content: message });
   const loading = addMessage('assistant', `Đang rà bản đồ tri thức<span class="dots"></span>`, 'loading');
   try {
-    const response = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, top_k: topK.value }) });
-    const data = await response.json();
+    const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, top_k: topK.value, history: history.slice(0, -1) }) });
+    const data = await response.json().catch(() => ({ error: 'Máy chủ trả về phản hồi không hợp lệ.' }));
     loading.remove();
     if (!response.ok) throw new Error(data.error || 'Đã xảy ra lỗi không xác định.');
     addMessage('assistant', escapeHtml(data.answer).replace(/\n/g, '<br>'));
     addSources(data.sources);
-  } catch (error) { loading.remove(); addMessage('assistant', `<p class="greeting">Chưa thể ra khơi</p><p>${escapeHtml(error.message)}</p>`); }
+    history.push({ role: 'assistant', content: data.answer });
+  } catch (error) {
+    loading.remove();
+    const detail = error instanceof TypeError
+      ? 'Không thể kết nối với máy chủ. Hãy chạy <code>python app.py</code>, rồi mở <code>http://127.0.0.1:8000</code>.'
+      : escapeHtml(error.message);
+    addMessage('assistant', `<p class="greeting">Chưa thể ra khơi</p><p>${detail}</p>`);
+  }
   finally { send.disabled = false; input.focus(); }
 }
 form.addEventListener('submit', event => { event.preventDefault(); submitQuestion(input.value); });

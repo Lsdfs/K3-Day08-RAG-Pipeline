@@ -22,9 +22,22 @@ sys.path.insert(0, str(PROJECT_ROOT))
 app = Flask(__name__, static_folder=str(WEB_DIR), static_url_path="")
 
 
+@app.after_request
+def allow_local_frontend(response):
+    """Let a locally opened HTML preview call the same development API."""
+    if request.path.startswith("/api/"):
+        response.headers["Access-Control-Allow-Origin"] = "*"
+    return response
+
+
 @app.get("/")
 def index():
     return send_from_directory(WEB_DIR, "index.html")
+
+
+@app.get("/api/health")
+def health():
+    return jsonify({"status": "ok"})
 
 
 @app.post("/api/chat")
@@ -32,6 +45,7 @@ def chat():
     payload = request.get_json(silent=True) or {}
     query = str(payload.get("message", "")).strip()
     top_k = payload.get("top_k", 5)
+    history = payload.get("history", [])
 
     if not query:
         return jsonify({"error": "Vui lòng nhập câu hỏi."}), 400
@@ -40,11 +54,12 @@ def chat():
         top_k = max(3, min(int(top_k), 10))
         from src.task10_generation import generate_with_citation
 
-        result = generate_with_citation(query, top_k=top_k)
+        result = generate_with_citation(query, top_k=top_k, conversation_history=history)
         return jsonify({
             "answer": result.get("answer", "Chưa thể tạo câu trả lời."),
             "sources": result.get("sources", []),
             "retrieval_source": result.get("retrieval_source", "hybrid"),
+            "generation_mode": result.get("generation_mode", "llm"),
         })
     except NotImplementedError:
         return jsonify({
@@ -56,4 +71,6 @@ def chat():
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=8000, debug=True)
+    # Keep a single predictable process for local demos; debug reload can spawn
+    # a second process and make it unclear which server owns port 8000.
+    app.run(host="127.0.0.1", port=8000, debug=False, use_reloader=False)
