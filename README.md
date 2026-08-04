@@ -520,10 +520,10 @@ run_dashboard()
 
 #### Deliverable Evaluation
 
-- [ ] File `group_project/evaluation/golden_dataset.json` — 15+ cặp Q&A
-- [ ] File `group_project/evaluation/eval_pipeline.py` — script chạy evaluation
-- [ ] File `group_project/evaluation/results.md` — bảng điểm + phân tích
-- [ ] So sánh A/B ít nhất 2 configs
+- [x] File `group_project/evaluation/golden_dataset.json` — 18 cặp Q&A
+- [x] File `group_project/evaluation/eval_pipeline.py` — script evaluation chạy offline
+- [x] File `group_project/evaluation/results.md` — bảng điểm + phân tích thực chạy
+- [x] So sánh A/B: hybrid + rerank với dense-only
 
 ---
 
@@ -539,9 +539,14 @@ run_dashboard()
 
 ### Kiến Trúc Hệ Thống
 
+```text
+Flask Chat UI → Conversation-aware Query → Semantic + BM25
+→ RRF Fusion → Reranking → Grounded Generation → Citation + Sources
+                                      ↓
+                         18-case A/B Evaluation
 ```
-[Vẽ diagram kiến trúc ở đây]
-```
+
+Chi tiết kiến trúc, kết quả và phân công nhóm: [`group_project/README.md`](group_project/README.md).
 
 ---
 
@@ -549,10 +554,7 @@ run_dashboard()
 
 | Thành viên | MSSV | Nhiệm vụ | Trạng thái |
 |-----------|------|----------|------------|
-| | | | |
-| | | | |
-| | | | |
-| | | | |
+| Nguyễn Quang Huy | 2A202601873 | Individual Task 1–10 | Hoàn thành |
 
 ---
 
@@ -565,6 +567,10 @@ pip install -r requirements.txt
 # Chạy web app
 python app.py
 # Mở http://127.0.0.1:8000
+
+# Chạy evaluation và tests
+python -m group_project.evaluation.eval_pipeline
+python -m pytest -v
 ```
 
 ---

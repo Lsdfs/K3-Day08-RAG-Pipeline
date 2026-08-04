@@ -1,17 +1,20 @@
 [
-  {
-    "question": "Học phí hàng năm của chương trình Business tại RMIT Vietnam là bao nhiêu?",
-    "expected_answer": "Khoảng 375.840.000 VND mỗi năm (tùy chương trình cụ thể).",
-    "expected_context": "Trang Tuition Fees, mục Undergraduate Programs"
-  },
-  {
-    "question": "Học phí được thanh toán theo hình thức nào?",
-    "expected_answer": "Thanh toán theo từng học kỳ, tính theo từng môn học đã đăng ký.",
-    "expected_context": "Trang Tuition Fees, mục Payment Structure"
-  },
-  {
-    "question": "Trường có cung cấp ký túc xá trong khuôn viên không?",
-    "expected_answer": "Không — trường không cung cấp chỗ ở trong khuôn viên, nhưng có đội ngũ hỗ trợ sinh viên tìm chỗ ở gần trường.",
-    "expected_context": "Trang Accommodation Services"
-  }
+  {"id":"hl-001","question":"Vịnh Hạ Long được UNESCO công nhận là Di sản Thế giới vào năm nào?","expected_answer":"Ha Long Bay was declared a UNESCO World Heritage Site in 1994.","expected_context":["UNESCO World Heritage Site","1994"]},
+  {"id":"hl-002","question":"Diện tích Vịnh Hạ Long được nguồn mô tả là bao nhiêu?","expected_answer":"The bay covers about 1,500 square kilometres.","expected_context":["1500km2","bay"]},
+  {"id":"hl-003","question":"Vịnh Hạ Long có bao nhiêu loài san hô?","expected_answer":"Ha Long Bay is home to more than 140 species of coral.","expected_context":["more than 140","species of coral"]},
+  {"id":"hl-004","question":"Rạn san hô quanh đảo Cống Đỏ phủ bao nhiêu phần trăm diện tích?","expected_answer":"Coral reefs cover between 30 and 60 percent around islands such as Cong Do.","expected_context":["30","60 percent","Cong Do"]},
+  {"id":"hl-005","question":"Nên dành bao nhiêu ngày để khám phá Vịnh Hạ Long bằng tàu?","expected_answer":"A two- or three-day cruise is ideal, although half-day and full-day trips are available.","expected_context":["two or three days","half-day","full-day cruise"]},
+  {"id":"hl-006","question":"Thời điểm nào phù hợp để chèo kayak trên Vịnh Hạ Long?","expected_answer":"Just before sunset is an ideal time to kayak and see quiet lagoons and fishing boats.","expected_context":["Just before sunset","ideal time to kayak"]},
+  {"id":"hl-007","question":"Thời tiết Vịnh Hạ Long từ tháng 9 đến tháng 11 như thế nào?","expected_answer":"The climate can be cool with clear skies from September to November.","expected_context":["cool with clear skies","September to November"]},
+  {"id":"hl-008","question":"Mùa gió mùa ảnh hưởng chuyến thăm Hạ Long vào thời gian nào?","expected_answer":"The monsoon season can make visits unpredictable from June to August.","expected_context":["monsoon season","June to August"]},
+  {"id":"hl-009","question":"Bay thủy phi cơ từ Nội Bài đến Hạ Long mất bao lâu?","expected_answer":"A direct seaplane ride from Noi Bai International Airport takes about 45 minutes.","expected_context":["45-minute","Noi Bai International Airport"]},
+  {"id":"hl-010","question":"Tour thủy phi cơ ngắm cảnh Hạ Long kéo dài bao lâu?","expected_answer":"Scheduled scenic seaplane tours last 25 minutes.","expected_context":["25-minute seaplane tours"]},
+  {"id":"hl-011","question":"Chuyến tham quan Hạ Long trong ngày bằng du thuyền kéo dài bao lâu?","expected_answer":"The suggested day excursion spends five hours on the water.","expected_context":["five-hour excursion"]},
+  {"id":"hl-012","question":"Ba hang động nổi bật ngoài đảo Cát Bà là những hang nào?","expected_answer":"Sung Sot, Me Cung, and Thien Cung are highlighted caves.","expected_context":["Sung Sot","Me Cung","Thien Cung"]},
+  {"id":"hl-013","question":"Hang Sửng Sốt rộng bao nhiêu mét vuông?","expected_answer":"Sung Sot Cave is a 10,000-square-metre cave system.","expected_context":["10,000 square meter","Sung Sot Cave"]},
+  {"id":"hl-014","question":"Có bao nhiêu làng chài nổi được nêu tại Vịnh Hạ Long?","expected_answer":"Four floating villages are named: Cua Van, Vung Vieng, Cong Dam, and Ba Hang.","expected_context":["four floating villages","Cua Van","Vung Vieng","Cong Dam","Ba Hang"]},
+  {"id":"hl-015","question":"Du khách có thể làm gì vào ban đêm trên du thuyền?","expected_answer":"Visitors can try squid fishing at night using a bamboo rod and lights.","expected_context":["SQUID FISHING AT NIGHT","bamboo rod","Lights"]},
+  {"id":"hl-016","question":"Đảo Khỉ cách thị trấn Cát Bà bao xa?","expected_answer":"Monkey Island is one kilometre from Cat Ba town and is reached by boat.","expected_context":["1 short kilometer","Cat Ba town","reached by boat"]},
+  {"id":"hl-017","question":"Hòn Gà Chọi cao bao nhiêu trên mặt nước?","expected_answer":"The two rock formations rise more than 12 metres above the water.","expected_context":["more than 12 meters","Hon Ga Choi"]},
+  {"id":"hl-018","question":"Nếu muốn nơi ít đông hơn Hạ Long thì nên chọn vịnh nào?","expected_answer":"Bai Tu Long Bay is recommended as a lesser-explored alternative.","expected_context":["Bái Tử Long Bay","lesser-explored"]}
 ]

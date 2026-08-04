@@ -1,83 +1,56 @@
-"""
-Task 6 — Lexical Search Module (BM25).
+"""Cached BM25 retrieval for Vietnamese and English Ha Long content."""
 
-Mặc định sử dụng BM25. Nếu dùng phương pháp khác (TF-IDF, Elasticsearch,
-Weaviate BM25 built-in), hãy giải thích cơ chế trong buổi demo → +5 bonus.
+from __future__ import annotations
 
-Cài đặt:
-    pip install rank-bm25
+import math
+import re
+from collections import Counter
 
-BM25 hoạt động thế nào:
-    - Term Frequency (TF): từ xuất hiện nhiều trong document → điểm cao
-    - Inverse Document Frequency (IDF): từ hiếm → quan trọng hơn
-    - Document length normalization: document dài không bị ưu tiên quá mức
-    - Formula: score(q,d) = Σ IDF(qi) * (tf(qi,d) * (k1+1)) / (tf(qi,d) + k1*(1-b+b*|d|/avgdl))
-    - k1=1.5 (term saturation), b=0.75 (length normalization)
-"""
+from .task4_chunking_indexing import load_index
 
-from pathlib import Path
+CORPUS: list[dict] = []
+_TOKENIZED: list[list[str]] = []
+_FREQ: list[Counter] = []
+_DF: Counter = Counter()
 
-# TODO: Load corpus từ data/standardized/ hoặc từ vector store
-CORPUS: list[dict] = []  # List of {'content': str, 'metadata': dict}
+
+def tokenize(text: str) -> list[str]:
+    return re.findall(r"[^\W_]+", " ".join(text.lower().split()), re.UNICODE)
 
 
 def build_bm25_index(corpus: list[dict]):
-    """
-    Xây dựng BM25 index từ corpus.
+    global CORPUS, _TOKENIZED, _FREQ, _DF
+    CORPUS = list(corpus)
+    _TOKENIZED = [tokenize(item["content"]) for item in CORPUS]
+    _FREQ = [Counter(tokens) for tokens in _TOKENIZED]
+    _DF = Counter(term for tokens in _TOKENIZED for term in set(tokens))
+    return {"documents": len(CORPUS)}
 
-    Args:
-        corpus: List of {'content': str, 'metadata': dict}
-    """
-    # TODO: Implement BM25 index
-    #
-    # from rank_bm25 import BM25Okapi
-    #
-    # # Tokenize - có thể đơn giản split(), hoặc dùng underthesea cho tiếng Việt
-    # tokenized_corpus = [doc["content"].lower().split() for doc in corpus]
-    # bm25 = BM25Okapi(tokenized_corpus)
-    # return bm25
-    raise NotImplementedError("Implement build_bm25_index")
+
+def _ensure_index():
+    if not CORPUS:
+        build_bm25_index(load_index())
 
 
 def lexical_search(query: str, top_k: int = 10) -> list[dict]:
-    """
-    Tìm kiếm từ khóa sử dụng BM25.
-
-    Args:
-        query: Câu truy vấn
-        top_k: Số lượng kết quả tối đa
-
-    Returns:
-        List of {
-            'content': str,
-            'score': float,      # BM25 score
-            'metadata': dict
-        }
-        Sorted by score descending.
-    """
-    # TODO: Implement lexical search
-    #
-    # tokenized_query = query.lower().split()
-    # scores = bm25.get_scores(tokenized_query)
-    #
-    # # Get top_k indices
-    # import numpy as np
-    # top_indices = np.argsort(scores)[::-1][:top_k]
-    #
-    # results = []
-    # for idx in top_indices:
-    #     if scores[idx] > 0:
-    #         results.append({
-    #             "content": CORPUS[idx]["content"],
-    #             "score": float(scores[idx]),
-    #             "metadata": CORPUS[idx]["metadata"]
-    #         })
-    # return results
-    raise NotImplementedError("Implement lexical_search")
-
-
-if __name__ == "__main__":
-    # Test
-    results = lexical_search("tuition fee payment methods", top_k=5)
-    for r in results:
-        print(f"[{r['score']:.3f}] {r['content'][:100]}...")
+    if not isinstance(query, str) or not query.strip():
+        raise ValueError("query must be a non-empty string")
+    if isinstance(top_k, bool) or not isinstance(top_k, int) or top_k <= 0:
+        raise ValueError("top_k must be a positive integer")
+    _ensure_index()
+    if not CORPUS:
+        return []
+    query_tokens = tokenize(query)
+    average_length = sum(map(len, _TOKENIZED)) / len(_TOKENIZED)
+    scored = []
+    for row, tokens, frequencies in zip(CORPUS, _TOKENIZED, _FREQ):
+        score = 0.0
+        for term in query_tokens:
+            tf = frequencies.get(term, 0)
+            idf = math.log(1 + (len(CORPUS) - _DF.get(term, 0) + .5) / (_DF.get(term, 0) + .5))
+            denominator = tf + 1.5 * (1 - .75 + .75 * len(tokens) / max(1, average_length))
+            score += idf * (tf * 2.5 / denominator if denominator else 0)
+        if score > 0:
+            scored.append({"content": row["content"], "score": score,
+                           "metadata": row["metadata"], "source": "lexical"})
+    return sorted(scored, key=lambda item: item["score"], reverse=True)[:top_k]

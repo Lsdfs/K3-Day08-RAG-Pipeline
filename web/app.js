@@ -4,6 +4,7 @@ const input = document.querySelector('#message');
 const send = document.querySelector('#send');
 const topK = document.querySelector('#topK');
 const topKValue = document.querySelector('#topKValue');
+let history = [];
 
 const escapeHtml = (text = '') => String(text).replace(/[&<>'"]/g, char => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[char]));
 function scrollDown() { chat.scrollTop = chat.scrollHeight; }
@@ -26,25 +27,29 @@ function addSources(sources) {
     const name = meta.source || `Tài liệu ${i + 1}`;
     const type = meta.type || 'document';
     const score = Number(source.score || 0).toFixed(3);
-    list.insertAdjacentHTML('beforeend', `<div class="source-card"><strong>${i + 1}. ${escapeHtml(name)}</strong><small> · ${escapeHtml(type)} · ${score}</small><p>${escapeHtml(String(source.content || '').slice(0, 260))}…</p></div>`);
+    const url = meta.source_url ? `<a href="${escapeHtml(meta.source_url)}" target="_blank" rel="noopener">Mở nguồn ↗</a>` : '';
+    list.insertAdjacentHTML('beforeend', `<div class="source-card"><strong>${i + 1}. ${escapeHtml(name)}</strong><small> · ${escapeHtml(type)} · ${score}</small><p>${escapeHtml(String(source.content || '').slice(0, 260))}…</p>${url}</div>`);
   });
   chat.append(details); scrollDown();
 }
 function resetChat() {
+  history = [];
   chat.innerHTML = `<article class="message assistant welcome"><div class="avatar">✦</div><div class="bubble"><p class="greeting">Một hải trình mới bắt đầu.</p><p>Mình sẵn sàng giúp bạn khám phá kho tư liệu về Vịnh Hạ Long.</p></div></article>`;
   input.focus();
 }
 async function submitQuestion(question) {
   const message = question.trim(); if (!message) return;
+  const requestHistory = history.slice(-6);
   addMessage('user', message); input.value = ''; input.style.height = 'auto'; send.disabled = true;
   const loading = addMessage('assistant', `Đang rà bản đồ tri thức<span class="dots"></span>`, 'loading');
   try {
-    const response = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, top_k: topK.value }) });
+    const response = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, top_k: topK.value, history: requestHistory }) });
     const data = await response.json();
     loading.remove();
     if (!response.ok) throw new Error(data.error || 'Đã xảy ra lỗi không xác định.');
     addMessage('assistant', escapeHtml(data.answer).replace(/\n/g, '<br>'));
     addSources(data.sources);
+    history.push({ role: 'user', content: message }, { role: 'assistant', content: data.answer });
   } catch (error) { loading.remove(); addMessage('assistant', `<p class="greeting">Chưa thể ra khơi</p><p>${escapeHtml(error.message)}</p>`); }
   finally { send.disabled = false; input.focus(); }
 }
