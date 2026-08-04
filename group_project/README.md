@@ -82,6 +82,21 @@ Context Recall, Context Precision) và so sánh:
 Kết quả, phân tích ba trường hợp kém nhất và recommendations nằm trong
 [`evaluation/results.md`](evaluation/results.md).
 
+## Deploy trên Render
+
+Repo có sẵn `render.yaml` và `requirements-deploy.txt` để deploy nhẹ, không tải
+Torch/Chroma/RAGAS trên web service. Quy trình:
+
+1. Push branch `main` lên GitHub.
+2. Trên Render chọn **New → Blueprint** và kết nối repository này.
+3. Render tự đọc `render.yaml`; chọn **Apply**.
+4. Chờ health check `/api/health` chuyển sang trạng thái **Live**.
+5. Mở URL dạng `https://ha-long-rag-chatbot.onrender.com` và lưu URL vào báo cáo.
+
+App mặc định dùng extractive generation, local retrieval và không cần secret.
+Nếu bật LLM, thêm `OPENROUTER_API_KEY` hoặc `OPENAI_API_KEY` trong Render
+Environment; không đưa key vào Git.
+
 ## Biến môi trường
 
 | Biến | Mục đích | Bắt buộc |

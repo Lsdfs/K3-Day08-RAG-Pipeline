@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: ha-long-rag-chatbot
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements-deploy.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: ENABLE_LLM_GENERATION
+        value: "0"
+      - key: ENABLE_LOCAL_EMBEDDINGS
+        value: "0"
+      - key: ENABLE_PAGEINDEX_CLOUD
+        value: "0"

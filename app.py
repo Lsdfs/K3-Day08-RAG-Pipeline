@@ -10,6 +10,7 @@ Lớp này chỉ lo giao diện/API. Logic RAG vẫn nằm trong src/task10_gene
 from __future__ import annotations
 
 from pathlib import Path
+import os
 import sys
 
 from flask import Flask, jsonify, request, send_from_directory
@@ -73,4 +74,5 @@ def chat():
 if __name__ == "__main__":
     # Keep a single predictable process for local demos; debug reload can spawn
     # a second process and make it unclear which server owns port 8000.
-    app.run(host="127.0.0.1", port=8000, debug=False, use_reloader=False)
+    app.run(host=os.getenv("HOST", "0.0.0.0"), port=int(os.getenv("PORT", "8000")),
+            debug=False, use_reloader=False)
