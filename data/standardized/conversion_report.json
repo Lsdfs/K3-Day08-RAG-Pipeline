@@ -1,0 +1,58 @@
+{
+  "total_files": 8,
+  "successful_files": 8,
+  "failed_files": 0,
+  "skipped_files": 0,
+  "empty_files": 0,
+  "results": [
+    {
+      "input": "legal/rmit-parents-and-families-guide-2026.pdf",
+      "status": "success",
+      "output": "legal/rmit-parents-and-families-guide-2026.md",
+      "converter": "pypdf_fallback"
+    },
+    {
+      "input": "legal/rmit-student-fees-and-charges-guide-2026.pdf",
+      "status": "success",
+      "output": "legal/rmit-student-fees-and-charges-guide-2026.md",
+      "converter": "pypdf_fallback"
+    },
+    {
+      "input": "legal/rmit-vietnam-factsheet-2025-2026.pdf",
+      "status": "success",
+      "output": "legal/rmit-vietnam-factsheet-2025-2026.md",
+      "converter": "pypdf_fallback"
+    },
+    {
+      "input": "news/rmit-article-01.json",
+      "status": "success",
+      "output": "news/rmit-article-01.md",
+      "converter": "json_native"
+    },
+    {
+      "input": "news/rmit-article-02.json",
+      "status": "success",
+      "output": "news/rmit-article-02.md",
+      "converter": "json_native"
+    },
+    {
+      "input": "news/rmit-article-03.json",
+      "status": "success",
+      "output": "news/rmit-article-03.md",
+      "converter": "json_native"
+    },
+    {
+      "input": "news/rmit-article-04.json",
+      "status": "success",
+      "output": "news/rmit-article-04.md",
+      "converter": "json_native"
+    },
+    {
+      "input": "news/rmit-article-05.json",
+      "status": "success",
+      "output": "news/rmit-article-05.md",
+      "converter": "json_native"
+    }
+  ],
+  "processed_at": "2026-08-04T03:15:31.220548+00:00"
+}
