@@ -1,22 +1,82 @@
 [
-  {"question": "Học phí một học kỳ là bao nhiêu?","expected_answer": "150 triệu VND mỗi học kỳ"},
-  {"question": "Sinh viên được mượn tối đa bao nhiêu cuốn sách từ thư viện?","expected_answer": "Tối đa 10 cuốn trong 14 ngày"},
-  {"question": "Thư viện mở cửa đến mấy giờ các ngày trong tuần?","expected_answer": "8h đến 22h các ngày trong tuần"},
-  {"question": "Cuối tuần thư viện mở cửa lúc mấy giờ?","expected_answer": "9h đến 17h cuối tuần"},
-  {"question": "Phòng đơn ký túc xá giá bao nhiêu một tháng?","expected_answer": "4.500.000 VND mỗi tháng"},
-  {"question": "Sinh viên đạo văn lần thứ hai bị xử lý thế nào?","expected_answer": "Điểm F cho môn học đó"},
-  {"question": "Học bổng Vingroup yêu cầu GPA tối thiểu bao nhiêu để duy trì?","expected_answer": "GPA tối thiểu 3.0 mỗi năm"},
-  {"question": "Sinh viên đăng ký tối đa bao nhiêu tín chỉ mỗi học kỳ?","expected_answer": "Tối đa 20 tín chỉ, GPA 3.2 trở lên được 24 tín chỉ"},
-  {"question": "Điểm F trong thang điểm 4.0 phải làm gì?","expected_answer": "Phải học lại môn đó"},
-  {"question": "Đóng học phí trễ hạn bị phạt bao nhiêu phần trăm?","expected_answer": "Phạt 2% số tiền chưa đóng"},
-  {"question": "Ký túc xá đóng cổng lúc mấy giờ?","expected_answer": "23h, về sau phải đăng ký với quản lý"},
-  {"question": "Làm lại thẻ sinh viên khi mất hết bao nhiêu tiền?","expected_answer": "100.000 VND"},
-  {"question": "Sinh viên GPA 3.8 được thưởng học bổng khuyến khích bao nhiêu?","expected_answer": "15 triệu VND"},
-  {"question": "Sinh viên quốc tế học tiếng Việt theo chương trình gì?","expected_answer": "Vietnamese Language Program"},
-  {"question": "Đặt phòng học nhóm thư viện tối đa bao lâu mỗi ngày?","expected_answer": "Tối đa 2 giờ mỗi ngày"},
-  {"question": "Cần IELTS bao nhiêu để tốt nghiệp?","expected_answer": "IELTS 6.5 hoặc tương đương"},
-  {"question": "Sinh viên đạo văn lần đầu bị xử lý ra sao?","expected_answer": "Điểm 0 cho bài tập và bị cảnh cáo"},
-  {"question": "Có được dùng AI để làm bài tập không?","expected_answer": "Được phép nhưng phải công khai và trích dẫn nguồn"},
-  {"question": "Ký túc xá có wifi miễn phí không?","expected_answer": "Có, wifi miễn phí toàn bộ khu KTX"},
-  {"question": "Sinh viên quá hạn đóng học phí trên 30 ngày bị sao?","expected_answer": "Bị tạm dừng truy cập hệ thống học tập"}
+  {
+    "question": "Vinh Ha Long duoc UNESCO cong nhan la di san gi?",
+    "expected_answer": "Di san thien nhien the gioi"
+  },
+  {
+    "question": "Vinh Ha Long nam o tinh nao cua Viet Nam?",
+    "expected_answer": "Quang Ninh"
+  },
+  {
+    "question": "Vinh Ha Long co bao nhieu hon dao?",
+    "expected_answer": "Khoang 1.969 dao da voi"
+  },
+  {
+    "question": "Vinh Ha Long duoc cong nhan la di san UNESCO vao nam nao?",
+    "expected_answer": "1994"
+  },
+  {
+    "question": "Ha Long co y nghia gi trong tieng Viet?",
+    "expected_answer": "Rong xuong bien"
+  },
+  {
+    "question": "Du lich Ha Long co nhung hoat dong nao?",
+    "expected_answer": "Du thuyen, tham hang dong, tam bien"
+  },
+  {
+    "question": "Vinh Ha Long co nhung hang dong noi tieng nao?",
+    "expected_answer": "Hang Sung Sot, Dong Thien Cung"
+  },
+  {
+    "question": "Vinh Ha Long co y nghia nhu the nao doi voi du lich Viet Nam?",
+    "expected_answer": "La diem den du lich hang dau"
+  },
+  {
+    "question": "Moi truong vinh Ha Long dang bi de doa boi van de gi?",
+    "expected_answer": "O nhiem, rac thai nhua"
+  },
+  {
+    "question": "He sinh thai vinh Ha Long bao gom nhung gi?",
+    "expected_answer": "Rung ngap man, ran san ho"
+  },
+  {
+    "question": "Vinh Ha Long thuoc khu vuc dia ly nao?",
+    "expected_answer": "Vinh Bac Bo"
+  },
+  {
+    "question": "Dao nao lon nhat trong vinh Ha Long?",
+    "expected_answer": "Dao Cat Ba"
+  },
+  {
+    "question": "Gia tri noi bat cua vinh Ha Long la gi?",
+    "expected_answer": "Canh quan thien nhien, gia tri dia chat"
+  },
+  {
+    "question": "Khi hau o vinh Ha Long nhu the nao?",
+    "expected_answer": "Nhiet doi gio mua"
+  },
+  {
+    "question": "Vinh Ha Long co gi dac biet ve mat dia chat?",
+    "expected_answer": "Da voi karst qua trinh phong hoa"
+  },
+  {
+    "question": "Co bao nhieu khach du lich tham Ha Long moi nam?",
+    "expected_answer": "Hang trieu luot khach"
+  },
+  {
+    "question": "Nhung loai dong vat nao song o vinh Ha Long?",
+    "expected_answer": "Ca, chim, linh truong"
+  },
+  {
+    "question": "Van de bao ton di san Ha Long la gi?",
+    "expected_answer": "Can bang giua phat trien du lich va bao ton"
+  },
+  {
+    "question": "Vinh Ha Long co vai tro gi trong kinh te Viet Nam?",
+    "expected_answer": "Dong gop lon cho nganh du lich"
+  },
+  {
+    "question": "Hang Sung Sot o Ha Long co gi dac biet?",
+    "expected_answer": "La hang dong lon nhat, co nhieu ngach da"
+  }
 ]
