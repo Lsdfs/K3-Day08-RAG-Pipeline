@@ -6,6 +6,39 @@ across paragraph boundaries.
 """
 
 from __future__ import annotations
+"""
+Hướng dẫn:
+    1. Đọc toàn bộ markdown files từ data/standardized/
+    2. Chọn 1 chunking strategy (giải thích lý do)
+    3. Chọn 1 embedding model (giải thích lý do)
+    4. Index vào vector store (ChromaDB khuyến cáo — đơn giản, local, không cần Docker)
+
+Chunking options (langchain-text-splitters):
+    - RecursiveCharacterTextSplitter: an toàn, phổ biến
+    - MarkdownHeaderTextSplitter: tốt cho file có heading
+    - SemanticChunker: dùng embedding để tách (nâng cao)
+
+Embedding model options (chọn 1, cân nhắc đánh đổi cài đặt nặng vs cần API key):
+    - sentence-transformers/all-MiniLM-L6-v2 hoặc BAAI/bge-m3 — chạy local, không
+      cần API key, nhưng cài nặng (~1-2GB vì kéo theo torch)
+    - Google models/text-embedding-004 (768 dim) — nhẹ, cần GEMINI_API_KEY
+    - OpenAI text-embedding-3-small (1536 dim) — nhẹ, cần OPENAI_API_KEY
+    Gợi ý: đọc EMBEDDING_PROVIDER từ .env (os.getenv("EMBEDDING_PROVIDER", "sentence_transformers"))
+    để cả nhóm có thể đổi provider mà không sửa code — nhớ đổi provider phải xoá
+    chroma_db/ cũ và reindex vì dimension khác nhau (1024/768/1536) không tương thích ngược.
+
+Vector store options:
+    - ChromaDB (khuyến cáo: đơn giản, local persistent, không cần Docker)
+    - Weaviate (hỗ trợ hybrid search built-in, cần Docker/Cloud)
+    - FAISS (chỉ dense search)
+
+Cài đặt:
+    pip install langchain-text-splitters sentence-transformers chromadb
+
+Lưu ý quan trọng: nếu sau này đổi corpus (đổi chủ đề, thêm/bớt tài liệu), phải XÓA
+chroma_db/ cũ trước khi reindex — nếu không, chunk cũ và mới sẽ tồn tại lẫn lộn
+trong cùng collection, retrieval sẽ trả về kết quả rác từ dữ liệu cũ.
+"""
 
 from pathlib import Path
 from typing import Any
