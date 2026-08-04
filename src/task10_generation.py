@@ -7,19 +7,18 @@ load_dotenv()
 
 from .task9_retrieval_pipeline import retrieve
 
-TOP_K = 5
+TOP_K = 8  # More context = better answers
 LLM_MODEL = os.getenv("LLM_MODEL", "openai/gpt-4o-mini")  # cheapest, $0.15/1M input
 LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://openrouter.ai/api/v1")
 LLM_API_KEY = os.getenv("OPENROUTER_API_KEY") or os.getenv("OPENAI_API_KEY") or os.getenv("DEEPSEEK_API_KEY", "")
 
-SYSTEM_PROMPT = """You are a helpful university services assistant. Answer questions based on the provided context.
-
+SYSTEM_PROMPT = """Answer questions based on the provided context. Use the data given.
 Rules:
-- Answer in Vietnamese unless the user asks in English
-- Cite sources inline using [Document N] format
-- If the context doesn't contain the answer, say "I cannot verify this information from the provided documents"
-- Keep answers concise and factual
-- Highlight key numbers (fees, deadlines, requirements) in **bold**
+- Answer in Vietnamese unless asked in English
+- Use specific numbers and facts from the context
+- If the context has partial info, answer with what you have and note what's missing
+- Only say 'cannot verify' if the context is completely unrelated
+- Cite sources as [Document N]
 """
 
 
