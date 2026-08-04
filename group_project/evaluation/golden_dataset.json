@@ -1,82 +1,102 @@
 [
   {
     "question": "Vinh Ha Long duoc UNESCO cong nhan la Di san gi?",
-    "answer": "Di san thien nhien the gioi"
+    "expected_answer": "Di san thien nhien the gioi",
+    "expected_context": "Vinh Ha Long duoc UNESCO cong nhan la Di san thien nhien the gioi."
   },
   {
     "question": "Vinh Ha Long duoc cong nhan la Di san the gioi vao nam nao?",
-    "answer": "1994"
+    "expected_answer": "1994",
+    "expected_context": "Nam 1994, Vinh Ha Long duoc UNESCO cong nhan la Di san the gioi."
   },
   {
     "question": "Vinh Ha Long nam o tinh nao?",
-    "answer": "Quang Ninh"
+    "expected_answer": "Quang Ninh",
+    "expected_context": "Vinh Ha Long thuoc tinh Quang Ninh, Viet Nam."
   },
   {
     "question": "Vinh Ha Long co dien tich bao nhieu?",
-    "answer": "1.533 km vuong"
+    "expected_answer": "1.533 km vuong",
+    "expected_context": "Vinh Ha Long co tong dien tich khoang 1.533 km vuong."
   },
   {
     "question": "Khu vuc di san duoc cong nhan co dien tich bao nhieu?",
-    "answer": "434 km vuong"
+    "expected_answer": "434 km vuong",
+    "expected_context": "Khu vuc di san duoc UNESCO cong nhan co dien tich 434 km vuong."
   },
   {
     "question": "Vinh Ha Long co bao nhieu dao da voi?",
-    "answer": "775 dao da voi"
+    "expected_answer": "775 dao da voi",
+    "expected_context": "Khu vuc di san Vinh Ha Long gom 775 dao da voi."
   },
   {
     "question": "Vinh Ha Long thuoc vinh nao?",
-    "answer": "Vinh Bac Bo"
+    "expected_answer": "Vinh Bac Bo",
+    "expected_context": "Vinh Ha Long nam trong Vinh Bac Bo."
   },
   {
     "question": "Dau Go nam o phia nao cua vinh Ha Long?",
-    "answer": "Tay bac"
+    "expected_answer": "Tay bac",
+    "expected_context": "Dao Dau Go nam o phia tay bac cua Vinh Ha Long."
   },
   {
     "question": "Cong Tay nam o phia nao cua vinh?",
-    "answer": "Phia dong"
+    "expected_answer": "Phia dong",
+    "expected_context": "Khu vuc Cong Tay nam o phia dong cua vinh."
   },
   {
     "question": "Dau Be nam o phia nao cua vinh?",
-    "answer": "Phia nam"
+    "expected_answer": "Phia nam",
+    "expected_context": "Dao Dau Be nam o phia nam cua vinh."
   },
   {
     "question": "Dao nao lon nhat gan vinh Ha Long?",
-    "answer": "Cat Ba"
+    "expected_answer": "Cat Ba",
+    "expected_context": "Cat Ba la dao lon nhat o khu vuc gan Vinh Ha Long."
   },
   {
     "question": "Vuon Quoc gia Cat Ba duoc UNESCO cong nhan la gi?",
-    "answer": "Khu du tru sinh quyen the gioi"
+    "expected_answer": "Khu du tru sinh quyen the gioi",
+    "expected_context": "Cat Ba duoc UNESCO cong nhan la Khu du tru sinh quyen the gioi."
   },
   {
     "question": "Vuon Quoc gia Cat Ba duoc cong nhan vao nam nao?",
-    "answer": "2004"
+    "expected_answer": "2004",
+    "expected_context": "Khu du tru sinh quyen Cat Ba duoc cong nhan vao nam 2004."
   },
   {
     "question": "Vinh Ha Long co gia tri noi bat nao?",
-    "answer": "Gia tri tham my"
+    "expected_answer": "Gia tri tham my",
+    "expected_context": "Vinh Ha Long co gia tri noi bat ve tham my va canh quan."
   },
   {
     "question": "Dac diem dia chat noi bat cua vinh Ha Long la gi?",
-    "answer": "Da voi karst bi nuoc bien chim ngap"
+    "expected_answer": "Da voi karst bi nuoc bien chim ngap",
+    "expected_context": "Dia chat Vinh Ha Long noi bat voi dia hinh da voi karst bi nuoc bien chim ngap."
   },
   {
     "question": "Chat luong nuoc vinh Ha Long bi o nhiem boi gi?",
-    "answer": "Vi sinh nhu E.coli vuot chi tieu"
+    "expected_answer": "Vi sinh nhu E.coli vuot chi tieu",
+    "expected_context": "Chat luong nuoc co dau hieu o nhiem vi sinh, trong do E.coli vuot chi tieu."
   },
   {
-    "question": "Vinh Ha Long doc cong nhan tai ky hop UNESCO nao?",
-    "answer": "Ky hop lan thu 18 tai Phu Ket Thai Lan"
+    "question": "Vinh Ha Long duoc cong nhan tai ky hop UNESCO nao?",
+    "expected_answer": "Ky hop lan thu 18 tai Phu Ket, Thai Lan",
+    "expected_context": "Vinh Ha Long duoc cong nhan tai ky hop lan thu 18 cua UNESCO o Phu Ket, Thai Lan."
   },
   {
     "question": "Tac gia cua muc Vinh Ha Long la ai?",
-    "answer": "Ta Hoa Phuong"
+    "expected_answer": "Ta Hoa Phuong",
+    "expected_context": "Tac gia cua muc Vinh Ha Long la Ta Hoa Phuong."
   },
   {
     "question": "Khoa Dia chat thuoc truong dai hoc nao?",
-    "answer": "Dai hoc Khoa hoc Tu nhien DHQGHN"
+    "expected_answer": "Dai hoc Khoa hoc Tu nhien, DHQGHN",
+    "expected_context": "Khoa Dia chat thuoc Truong Dai hoc Khoa hoc Tu nhien, Dai hoc Quoc gia Ha Noi."
   },
   {
     "question": "Vinh Ha Long nam trong khoang kinh do nao?",
-    "answer": "106 56 den 107 37 kinh do dong"
+    "expected_answer": "106 56 den 107 37 kinh do dong",
+    "expected_context": "Vinh Ha Long nam trong khoang 106 do 56 phut den 107 do 37 phut kinh do dong."
   }
 ]

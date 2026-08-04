@@ -43,15 +43,14 @@ Markdown corpus → chunks → ChromaDB (Tasks 3–4)
 
 ## Phân công
 
-Repo được tích hợp từ các nhánh thành viên; cần thay tên/MSSV bên dưới bằng
-thông tin chính thức trước khi nộp nếu giảng viên yêu cầu MSSV.
-
-| Thành viên/nhánh | Nhiệm vụ | Trạng thái |
-|---|---|---|
-| DinhKhoa | Data, conversion, chunking/indexing | Hoàn thành |
-| vietnguyen | Corpus Hạ Long, index và golden dataset | Hoàn thành |
-| zoanh | Flask UI/UX, memory và source display | Hoàn thành |
-| Chu Thi Yen Khanh | Integration, retrieval, generation và evaluation | Hoàn thành |
+| Thành viên | MSSV | Nhiệm vụ | Trạng thái |
+|---|---|---|---|
+| Chu Thị Yến Khanh | 2A202601739 | Role 1 — Team Leader & RAG Architect | Hoàn thành |
+| Nguyễn Quang Huy | 2A202601873 | Role 2 — Data Engineering & Scraping Dev | Hoàn thành |
+| Trương Đình Khoa | 2A202601297 | Role 3 — Vector Database & Dense Search Dev | Hoàn thành |
+| Lương Đăng Doanh | 2A202601209 | Role 4 — Sparse Retrieval & Fallback Dev | Hoàn thành |
+| Nguyễn Quốc Việt | 2A202601737 | Role 5 — Frontend UI & App Integration Dev | Hoàn thành |
+| Vũ Quang Tùng | 2A202601545 | Role 6 — Evaluation & Benchmark QA Dev | Hoàn thành |
 
 ## Chạy dự án
 

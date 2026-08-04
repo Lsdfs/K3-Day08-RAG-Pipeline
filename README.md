@@ -2,12 +2,12 @@
 
 | Thành viên | MSSV | Nhiệm vụ | Trạng thái |
 |-----------|------|----------|------------|
-| Chu Thị Yến Khanh | 2A202601739 | Role 1 (Team Leader & RAG Architect) |  |
-| Nguyễn Quang Huy | 2A202601873 | Role 2 (Data Engineering & Scraping Dev) |  |
-| Trương Đình Khoa | 2A202601297 | Role 3 (Vector Database & Dense Search Dev) |  |
-| Lương Đăng Doanh | 2A202601209 | Role 4 (Sparse Retrieval & Fallback Dev) |  |
-| Nguyễn Quốc Việt | 2A202601737 | Role 5 (Frontend UI & App Integration Dev) |  |
-| Vũ Quang Tùng | 2A202601545 | Role 6 (Evaluation & Benchmark QA Dev) |  |
+| Chu Thị Yến Khanh | 2A202601739 | Role 1 (Team Leader & RAG Architect) | Hoàn thành |
+| Nguyễn Quang Huy | 2A202601873 | Role 2 (Data Engineering & Scraping Dev) | Hoàn thành |
+| Trương Đình Khoa | 2A202601297 | Role 3 (Vector Database & Dense Search Dev) | Hoàn thành |
+| Lương Đăng Doanh | 2A202601209 | Role 4 (Sparse Retrieval & Fallback Dev) | Hoàn thành |
+| Nguyễn Quốc Việt | 2A202601737 | Role 5 (Frontend UI & App Integration Dev) | Hoàn thành |
+| Vũ Quang Tùng | 2A202601545 | Role 6 (Evaluation & Benchmark QA Dev) | Hoàn thành |
 
 **Chương 2 | Ngày 8 trong 15**
 

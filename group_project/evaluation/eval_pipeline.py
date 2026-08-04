@@ -55,16 +55,18 @@ class Scores:
                     self.context_recall, self.context_precision)) / 4
 
 
-def score_case(question: str, expected: str, answer: str, contexts: list[str]) -> Scores:
+def score_case(question: str, expected: str, expected_context: str,
+               answer: str, contexts: list[str]) -> Scores:
     joined = " ".join(contexts)
-    useful = [c for c in contexts if overlap(expected, c) > 0]
+    context_reference = expected_context or expected
+    useful = [c for c in contexts if overlap(context_reference, c) > 0]
     # Citation plus answer support in retrieved text is a deterministic
     # groundedness proxy when an LLM judge is unavailable.
     citation = 1.0 if re.search(r"\[[^\]]+,\s*(?:n\.d\.|\d{4})\]", answer) else 0.0
     support = overlap(answer, joined)
     faithfulness = min(1.0, 0.75 * support + 0.25 * citation)
     answer_relevance = min(1.0, 0.65 * overlap(expected, answer) + 0.35 * overlap(question, answer))
-    context_recall = min(1.0, overlap(expected, joined))
+    context_recall = min(1.0, overlap(context_reference, joined))
     context_precision = len(useful) / max(len(contexts), 1)
     return Scores(faithfulness, answer_relevance, context_recall, context_precision)
 
@@ -74,12 +76,13 @@ def run_config(items: list[dict], *, use_reranking: bool) -> list[dict]:
     for item in items:
         question = item["question"]
         expected = item.get("expected_answer", item.get("answer", ""))
+        expected_context = item.get("expected_context", expected)
         contexts_raw = (retrieve(question, top_k=5, use_reranking=True)
                         if use_reranking else semantic_search(question, top_k=5))
         contexts = [c.get("content", "") for c in contexts_raw]
         generated = generate_with_citation(question, top_k=5)
         answer = generated["answer"]
-        score = score_case(question, expected, answer, contexts)
+        score = score_case(question, expected, expected_context, answer, contexts)
         rows.append({"question": question, "expected": expected, "answer": answer,
                      "scores": score, "sources": contexts_raw})
     return rows
