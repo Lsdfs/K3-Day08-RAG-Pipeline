@@ -1,0 +1,47 @@
+[
+  {
+    "id": "rmit-legal-001",
+    "title": "RMIT Vietnam Student Fees and Charges Guide 2026",
+    "source_url": "https://www.rmit.edu.vn/assets/vn/en/assets-for-production/documents/pdfs/study-at-rmit/tuition-fees/student-fees-and-charges-guide-06-2026.pdf",
+    "publisher": "RMIT University Vietnam",
+    "filename": "rmit-student-fees-and-charges-guide-2026.pdf",
+    "document_type": "fees_policy",
+    "downloaded_at": "2026-08-04T03:09:58.239107+00:00",
+    "status": "success",
+    "http_status": 200,
+    "content_type": "application/pdf",
+    "local_path": "data/landing/legal/rmit-student-fees-and-charges-guide-2026.pdf",
+    "sha256": "e77ef293e02e217326056f490b2a5a712341fabc97f5ed5fb83c49eac65c393b",
+    "duration_ms": 3378
+  },
+  {
+    "id": "rmit-legal-002",
+    "title": "RMIT Vietnam Factsheet 2025-2026",
+    "source_url": "https://www.rmit.edu.vn/content/dam/rmit/vn/en/assets-for-production/documents/pdfs/global-experiences/rmit-vietnam-fact-sheet-2025-2026.pdf",
+    "publisher": "RMIT University Vietnam",
+    "filename": "rmit-vietnam-factsheet-2025-2026.pdf",
+    "document_type": "student_services_guide",
+    "downloaded_at": "2026-08-04T03:10:01.618044+00:00",
+    "status": "skipped_duplicate",
+    "http_status": 200,
+    "content_type": "application/pdf",
+    "local_path": "data/landing/legal/rmit-vietnam-factsheet-2025-2026.pdf",
+    "sha256": "8d6acc6b2ace640d3d431bc44f81cf60d3915d3f50154bf99e974ab33ba2bde4",
+    "duration_ms": 4614
+  },
+  {
+    "id": "rmit-legal-003",
+    "title": "RMIT Vietnam Guide for Parents and Families 2026",
+    "source_url": "https://www.rmit.edu.vn/assets/vn/en/assets-for-production/documents/pdfs/vn-parents-guide/en-parents-guide-2026.pdf",
+    "publisher": "RMIT University Vietnam",
+    "filename": "rmit-parents-and-families-guide-2026.pdf",
+    "document_type": "student_support_guide",
+    "downloaded_at": "2026-08-04T03:10:06.232824+00:00",
+    "status": "skipped_duplicate",
+    "http_status": 200,
+    "content_type": "application/pdf",
+    "local_path": "data/landing/legal/rmit-parents-and-families-guide-2026.pdf",
+    "sha256": "1622e8ebfdaab7abef9c2e2256065cc08c9d44587036e9547bf1e7cedfc9ac94",
+    "duration_ms": 6177
+  }
+]

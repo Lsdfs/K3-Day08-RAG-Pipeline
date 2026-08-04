@@ -1,0 +1,47 @@
+[
+  {
+    "id": "halong-legal-001",
+    "title": "Management Plan for Ha Long Bay - Cat Ba Archipelago 2021-2025",
+    "source_url": "https://whc.unesco.org/document/190339",
+    "publisher": "UNESCO World Heritage Centre",
+    "document_type": "management_plan",
+    "file_type": "pdf",
+    "downloaded_at": "2026-08-04T03:09:28.929946+00:00",
+    "status": "success",
+    "http_status": 200,
+    "content_type": "application/pdf",
+    "sha256": "68b1580d7150101d8ea0e6625d5303a216a00fe231093180495d6bae31741490",
+    "local_path": "group_project/ha_long_tourism/data/landing/legal/ha-long-cat-ba-management-plan-2021-2025.pdf",
+    "duration_ms": 2592
+  },
+  {
+    "id": "halong-legal-002",
+    "title": "Kế hoạch quản lý khu rừng đặc dụng bảo vệ cảnh quan vịnh Hạ Long năm 2024",
+    "source_url": "https://halongbay.com.vn/Data/files/49_KH-BQLVHL_%20K%E1%BA%BE%20HO%E1%BA%A0CH%20QL%20R%E1%BB%AANG%20%C4%90%E1%BA%B6C%20D%E1%BB%A4NG%20V%E1%BB%8ANH%20H%E1%BA%A0%20LONG_signed.pdf",
+    "publisher": "Ban Quản lý Vịnh Hạ Long",
+    "document_type": "conservation_plan",
+    "file_type": "pdf",
+    "downloaded_at": "2026-08-04T03:09:31.523141+00:00",
+    "status": "success",
+    "http_status": 200,
+    "content_type": "application/pdf",
+    "sha256": "8d0bd7fdd18698f6f1c529cf3d97afad71fc9d305c96171749952f00b8f5c305",
+    "local_path": "group_project/ha_long_tourism/data/landing/legal/ha-long-special-use-forest-management-plan-2024.pdf",
+    "duration_ms": 577
+  },
+  {
+    "id": "halong-legal-003",
+    "title": "Kế hoạch triển khai vùng hoạt động vui chơi giải trí trên vịnh Hạ Long",
+    "source_url": "https://halongbay.com.vn/Data/files/N%C4%82M%202024/14_KH%20tri%E1%BB%83n%20khai%20Quy%E1%BA%BFt%20%C4%91%E1%BB%8Bnh%20s%E1%BB%91%20152Q%C4%90%20UBND%20v%E1%BB%81%20c%C3%B4ng%20b%E1%BB%91%20v%C3%B9ng%20h%C4%91%20vui%20ch%C6%A1i%20gi%E1%BA%A3i%20tr%C3%AD%20Ba%20Hang%20T%C3%B9ng%20S%C3%A2u%20V.pdf",
+    "publisher": "Ban Quản lý Vịnh Hạ Long",
+    "document_type": "visitor_safety_plan",
+    "file_type": "pdf",
+    "downloaded_at": "2026-08-04T03:09:32.100470+00:00",
+    "status": "success",
+    "http_status": 200,
+    "content_type": "application/pdf",
+    "sha256": "b365d55c74662af9aa04de5a3bcbc90f8fbceca1309d69bcff62c4b22d9833f7",
+    "local_path": "group_project/ha_long_tourism/data/landing/legal/ha-long-water-recreation-safety-plan-2024.pdf",
+    "duration_ms": 493
+  }
+]

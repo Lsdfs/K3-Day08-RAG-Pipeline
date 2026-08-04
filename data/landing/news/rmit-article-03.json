@@ -1,0 +1,16 @@
+{
+  "url": "https://www.rmit.edu.vn/students/my-studies/fees-and-payments",
+  "source_url": "https://www.rmit.edu.vn/students/my-studies/fees-and-payments",
+  "title": "Fees and payments - RMIT University",
+  "date_crawled": "2026-08-04T03:10:45.913615+00:00",
+  "crawled_at": "2026-08-04T03:10:45.913615+00:00",
+  "published_at": null,
+  "publisher": "RMIT University Vietnam",
+  "content_type": "university_service_article",
+  "crawl_status": "success",
+  "status": "success",
+  "content_markdown": "Paying your fees\nInformation regarding how to pay for your fees and the methods of payment available.\nDefer a payment\nRMIT has strict payment and enrolment deadlines. However, we also understand that there may be exceptional cases that make it appropriate for a payment plan to be approved.\nTuition fees FAQ and support\nGet the support you need and answers to frequently asked questions about tuition fees.\nHow to apply for a refund\nLearn the eligibility criteria and the procedure on how to apply for a refund.\nHealth insurance\nAt RMIT Vietnam, your health and wellbeing matter. Having health insurance ensures you are supported with medical care during your studies.\nTax invoices\nYour invoice lists all your current fees, charges and due dates.",
+  "content": "Paying your fees\nInformation regarding how to pay for your fees and the methods of payment available.\nDefer a payment\nRMIT has strict payment and enrolment deadlines. However, we also understand that there may be exceptional cases that make it appropriate for a payment plan to be approved.\nTuition fees FAQ and support\nGet the support you need and answers to frequently asked questions about tuition fees.\nHow to apply for a refund\nLearn the eligibility criteria and the procedure on how to apply for a refund.\nHealth insurance\nAt RMIT Vietnam, your health and wellbeing matter. Having health insurance ensures you are supported with medical care during your studies.\nTax invoices\nYour invoice lists all your current fees, charges and due dates.",
+  "content_hash": "3d12d633ba5c7b5375ce08151cdfc1572293c7469c9629ce84365d0877612dd7",
+  "crawler": "requests_beautifulsoup"
+}

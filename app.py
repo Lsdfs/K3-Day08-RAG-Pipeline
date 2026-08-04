@@ -56,6 +56,16 @@ with st.sidebar:
     st.subheader("⚙️ Thiết lập")
     top_k = st.slider("Số chunks retrieval (top_k)", 3, 10, 5)
 
+    if st.button("🗑️ Xóa cuộc trò chuyện", use_container_width=True):
+        st.session_state.messages = []
+        st.session_state.pending_query = None
+        st.rerun()
+
+    if not (PROJECT_ROOT / "chroma_db").exists():
+        st.warning("Chưa có index. Chạy `python -m src.task4_chunking_indexing`.")
+    if not (os.getenv("OPENROUTER_API_KEY") or os.getenv("OPENAI_API_KEY")):
+        st.info("Chưa cấu hình API key LLM; ứng dụng sẽ dùng câu trả lời extractive local.")
+
     st.divider()
     st.caption("**Kiến trúc hệ thống:**")
     st.caption("Hybrid Retrieval (Semantic + BM25) → RRF Rerank → PageIndex Fallback → LLM Generation có Citation")
@@ -111,14 +121,6 @@ if query:
     with st.chat_message("assistant"):
         with st.spinner("Đang tìm kiếm tài liệu và tổng hợp câu trả lời..."):
             try:
-                # TODO (Học viên): Tích hợp hàm sinh câu trả lời từ Task 10
-                # Ví dụ:
-                # from src.task10_generation import generate_with_citation
-                # response = generate_with_citation(query, top_k=top_k)
-                # answer = response["answer"]
-                # sources = response.get("sources", [])
-
-                # Tạm thời mockup để test UI:
                 from src.task10_generation import generate_with_citation
                 response = generate_with_citation(query, top_k=top_k)
                 answer = response.get("answer", "Chưa thể trả lời.")

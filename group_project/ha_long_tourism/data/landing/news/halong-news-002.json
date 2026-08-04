@@ -1,0 +1,15 @@
+{
+  "id": "halong-news-002",
+  "title": "Quy định chung trong việc sử dụng vé tham quan vịnh Hạ Long",
+  "source_url": "https://halongbay.com.vn/p/59-quy-dinh-chung-trong-viec-su-dung-ve-tham-quan-vinh-ha-long",
+  "publisher": "Ban Quản lý Vịnh Hạ Long",
+  "published_at": null,
+  "crawled_at": "2026-08-04T03:10:29.642390+00:00",
+  "language": "vi",
+  "content_type": "tourism_article",
+  "topic": "ticket_rules",
+  "content": "Quy định chung trong việc sử dụng vé tham quan vịnh Hạ Long\nCập nhật lúc 2024-11-02 10:03:59\nVé tham quan\nCác tổ chức, cá nhân liên quan đến việc sử dụng vé  tham quan vịnh Hạ Long không được vi phạm một trong các quy định sau:\n1. Tẩy xóa, sửa chữa nội dung vé tham quan.\n2. Sử dụng vé giả mạo.\n3. Sử dụng vé không đúng theo quy định ghi trên vé.\n4. Sử dụng vé đã hết thời hạn quy định.\n5. Khai man để được hưởng chế độ miễn, giảm vé tham quan.\n6. Làm trái các quy định của của pháp luật về chế độ in, phát hành, quản lý sử dụng ấn chỉ.",
+  "content_hash": "fa2d6de1ce38e6f3af92f10eea2bc5d55d2c44b81506e9dfea961ec82d8340b3",
+  "status": "success",
+  "crawler": "requests_beautifulsoup"
+}

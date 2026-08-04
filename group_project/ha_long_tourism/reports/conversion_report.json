@@ -1,0 +1,65 @@
+{
+  "total_files": 8,
+  "successful_files": 3,
+  "failed_files": 0,
+  "skipped_files": 5,
+  "empty_files": 0,
+  "results": [
+    {
+      "input": "legal/ha-long-cat-ba-management-plan-2021-2025.pdf",
+      "status": "success",
+      "output": "legal/ha-long-cat-ba-management-plan-2021-2025.md",
+      "converter": "pypdf_fallback",
+      "content_hash": "022a5986af8e7a3a1f612231f63b1fe50c3c20cdf69c1ef50f2c2d245fb82b6e"
+    },
+    {
+      "input": "legal/ha-long-special-use-forest-management-plan-2024.pdf",
+      "status": "success",
+      "output": "legal/ha-long-special-use-forest-management-plan-2024.md",
+      "converter": "pypdf_fallback",
+      "content_hash": "2154a24018127ce48ee7cbf60bfb6c61c140ccf27b0ac9083dfdd85c75e4b4a1"
+    },
+    {
+      "input": "legal/ha-long-water-recreation-safety-plan-2024.pdf",
+      "status": "success",
+      "output": "legal/ha-long-water-recreation-safety-plan-2024.md",
+      "converter": "pypdf_fallback",
+      "content_hash": "1c87a2a0548de3fa885fe80712792b6f95d184d4e0fdfb4e5a18e212dfef2473"
+    },
+    {
+      "input": "news/halong-news-001.json",
+      "status": "skipped",
+      "output": "news/halong-news-001.md",
+      "converter": "json_native",
+      "content_hash": "c3aab9d9b746c644ad1ac9b7f52d4f372b30b4b389a2d30d356c91e26b34d56c"
+    },
+    {
+      "input": "news/halong-news-002.json",
+      "status": "skipped",
+      "output": "news/halong-news-002.md",
+      "converter": "json_native",
+      "content_hash": "6eef9ab86abbd765fa56847cbf3e4b29d7bf186e855320d0148face6eb4af7c3"
+    },
+    {
+      "input": "news/halong-news-003.json",
+      "status": "skipped",
+      "output": "news/halong-news-003.md",
+      "converter": "json_native",
+      "content_hash": "65c174fa1c6728fb10a30ba44876d38e1574bc1ae22e1436068174b3749ee884"
+    },
+    {
+      "input": "news/halong-news-004.json",
+      "status": "skipped",
+      "output": "news/halong-news-004.md",
+      "converter": "json_native",
+      "content_hash": "2f71e21e30c4d93b94b19229a37fbaf9cb704e9dc6fe3de4e599018a2b29400e"
+    },
+    {
+      "input": "news/halong-news-005.json",
+      "status": "skipped",
+      "output": "news/halong-news-005.md",
+      "converter": "json_native",
+      "content_hash": "d8175889a17a3d8a5571d541a031603c10d4e81a35139038abdc52ca85928547"
+    }
+  ]
+}

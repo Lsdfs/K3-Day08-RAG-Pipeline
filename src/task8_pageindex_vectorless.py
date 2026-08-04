@@ -1,110 +1,66 @@
-"""
-Task 8 — PageIndex Vectorless RAG.
+"""Task 8: PageIndex upload and query lifecycle with a graceful no-key state."""
 
-Đăng ký tài khoản tại: https://pageindex.ai/
-SDK & sample code: https://github.com/VectifyAI/PageIndex
+from __future__ import annotations
 
-PageIndex cho phép RAG mà không cần vector store — sử dụng
-structural understanding của document thay vì embedding.
-
-Cài đặt:
-    pip install pageindex
-
-Hướng dẫn:
-    1. Đăng ký account tại pageindex.ai
-    2. Lấy API key
-    3. Upload documents
-    4. Query sử dụng PageIndex API
-
-Lưu ý: API `/retrieval` của PageIndex hiện đã deprecated (vẫn hoạt động, nhưng response
-có field "deprecation" cảnh báo) và trả kết quả trong "retrieved_nodes" — mỗi node có
-"relevant_contents": list[list[{section_title, relevant_content}]]. In response thật ra
-(json.dumps(...)) trước khi viết logic parse, đừng đoán schema từ ví dụ code cũ.
-"""
-
+import json
 import os
 from pathlib import Path
+
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
-
+ROOT = Path(__file__).resolve().parents[1]
+STANDARDIZED_DIR = ROOT / "data" / "standardized"
+MANIFEST_PATH = ROOT / "pageindex_doc_ids.json"
 PAGEINDEX_API_KEY = os.getenv("PAGEINDEX_API_KEY", "")
-STANDARDIZED_DIR = Path(__file__).parent.parent / "data" / "standardized"
+BASE_URL = os.getenv("PAGEINDEX_BASE_URL", "https://api.pageindex.ai")
+TIMEOUT = 30
 
 
-def upload_documents():
-    """
-    Upload toàn bộ markdown documents lên PageIndex.
-    """
-    # TODO: Implement upload
-    #
-    # Tham khảo: https://github.com/VectifyAI/PageIndex
-    #
-    # from pageindex.client import PageIndexClient
-    #
-    # client = PageIndexClient(api_key=PAGEINDEX_API_KEY)
-    #
-    # for md_file in STANDARDIZED_DIR.rglob("*.md"):
-    #     # Lưu ý: PageIndex nhận PDF, không nhận .md trực tiếp — có thể cần
-    #     # convert markdown sang PDF đơn giản bằng fpdf2 trước khi upload.
-    #     resp = client.submit_document(str(pdf_path))
-    #     doc_id = resp.get("doc_id") or resp.get("id")
-    #     print(f"  ✓ Uploaded: {md_file.name} -> {doc_id}")
-    raise NotImplementedError("Implement upload_documents")
+def _headers() -> dict:
+    if not os.getenv("PAGEINDEX_API_KEY", PAGEINDEX_API_KEY):
+        raise RuntimeError("PAGEINDEX_API_KEY is not configured; Task 8 live API is BLOCKED")
+    return {"Authorization": f"Bearer {os.getenv('PAGEINDEX_API_KEY', PAGEINDEX_API_KEY)}"}
+
+
+def upload_documents(paths: list[Path] | None = None) -> dict:
+    """Upload once and persist returned IDs; existing content hashes are skipped."""
+    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8")) if MANIFEST_PATH.exists() else {}
+    for path in paths or sorted(STANDARDIZED_DIR.rglob("*.md")):
+        import hashlib
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        if digest in manifest: continue
+        with path.open("rb") as handle:
+            response = requests.post(f"{BASE_URL}/documents", headers=_headers(),
+                                     files={"file": (path.name, handle, "text/markdown")}, timeout=TIMEOUT)
+        response.raise_for_status()
+        payload = response.json(); doc_id = payload.get("doc_id") or payload.get("id")
+        if not doc_id: raise ValueError("PageIndex upload response has no document id")
+        manifest[digest] = {"doc_id": doc_id, "source": str(path)}
+    MANIFEST_PATH.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    return manifest
 
 
 def pageindex_search(query: str, top_k: int = 5) -> list[dict]:
-    """
-    Vectorless retrieval sử dụng PageIndex.
-    Dùng làm fallback khi hybrid search không có kết quả tốt.
-
-    Args:
-        query: Câu truy vấn
-        top_k: Số lượng kết quả tối đa
-
-    Returns:
-        List of {
-            'content': str,
-            'score': float,
-            'metadata': dict,
-            'source': 'pageindex'   # Đánh dấu nguồn retrieval
-        }
-    """
-    # TODO: Implement PageIndex query
-    #
-    # from pageindex.client import PageIndexClient
-    #
-    # client = PageIndexClient(api_key=PAGEINDEX_API_KEY)
-    # resp = client.submit_query(doc_id=doc_id, query=query)
-    # retrieval_id = resp.get("retrieval_id") or resp.get("id")
-    #
-    # # Poll cho đến khi status == "completed"
-    # retrieval = client.get_retrieval(retrieval_id)
-    #
-    # # Parse retrieval["retrieved_nodes"] — mỗi node có "relevant_contents"
-    # results = []
-    # for node in retrieval.get("retrieved_nodes", [])[:2]:
-    #     for group in node.get("relevant_contents", []):
-    #         for item in group:
-    #             results.append({
-    #                 "content": item.get("relevant_content", ""),
-    #                 "score": ...,  # PageIndex không trả score trực tiếp — tự gán theo rank
-    #                 "metadata": {"section": item.get("section_title")},
-    #                 "source": "pageindex",
-    #             })
-    # return results[:top_k]
-    raise NotImplementedError("Implement pageindex_search")
-
-
-if __name__ == "__main__":
-    if not PAGEINDEX_API_KEY:
-        print("⚠ Hãy set PAGEINDEX_API_KEY trong file .env")
-        print("  Đăng ký tại: https://pageindex.ai/")
-    else:
-        print("Uploading documents...")
-        upload_documents()
-
-        print("\nTest query:")
-        results = pageindex_search("tuition fee payment methods", top_k=3)
-        for r in results:
-            print(f"[{r['score']:.3f}] {r['content'][:100]}...")
+    if not isinstance(query, str) or not query.strip(): raise ValueError("query must be non-empty")
+    if isinstance(top_k, bool) or not isinstance(top_k, int) or top_k <= 0: raise ValueError("top_k must be positive")
+    if not os.getenv("PAGEINDEX_API_KEY", PAGEINDEX_API_KEY) or not MANIFEST_PATH.exists(): return []
+    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    results = []
+    for record in manifest.values():
+        try:
+            response = requests.post(f"{BASE_URL}/retrieval", headers={**_headers(), "Content-Type": "application/json"},
+                                     json={"doc_id": record["doc_id"], "query": query}, timeout=TIMEOUT)
+            response.raise_for_status()
+            for node in response.json().get("retrieved_nodes", []):
+                for group in node.get("relevant_contents", []):
+                    for item in group:
+                        content = str(item.get("relevant_content", "")).strip()
+                        if content:
+                            results.append({"content": content, "score": 1 / (len(results) + 1),
+                                "metadata": {"source": record["source"], "section": item.get("section_title")},
+                                "source": "pageindex"})
+        except (requests.RequestException, ValueError, KeyError):
+            continue
+    return results[:top_k]

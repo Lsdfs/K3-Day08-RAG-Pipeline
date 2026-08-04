@@ -21,6 +21,26 @@ pinned: false
 
 Xây dựng một RAG pipeline thực tế, end-to-end, từ thu thập dữ liệu chính sách và thông tin dịch vụ đại học → xử lý → indexing → retrieval (hybrid + vectorless fallback) → generation có citation.
 
+## Trạng thái triển khai
+
+Individual Task 1–10 đã có implementation chạy được và test robustness. Dữ liệu cá nhân là University Services/RMIT, tách biệt hoàn toàn với dữ liệu nhóm Hạ Long tại `group_project/ha_long_tourism/`. Phạm vi nhóm bổ sung chỉ gồm Group Task 1–3; xem hướng dẫn và báo cáo nguồn tại [`group_project/ha_long_tourism/README.md`](group_project/ha_long_tourism/README.md).
+
+```powershell
+# Thu thập và chuẩn hóa dữ liệu cá nhân
+python -m src.task1_collect_legal_docs
+python -m src.task2_crawl_news
+python -m src.task3_convert_markdown
+
+# Index và chạy test
+python -m src.task4_chunking_indexing
+python -m pytest -v
+
+# UI
+streamlit run app.py
+```
+
+Task 4 ưu tiên BGE-M3 + ChromaDB. Khi các dependency/model này chưa sẵn sàng, demo local dùng persistent hashing-vector fallback và ghi rõ model thực tế trong log; đây không được coi là một lần chạy Chroma/BGE thành công. Task 8 trả danh sách rỗng an toàn khi thiếu `PAGEINDEX_API_KEY`, không giả lập kết quả API.
+
 ---
 
 ## Chủ Đề Dữ Liệu
