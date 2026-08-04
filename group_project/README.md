@@ -95,6 +95,23 @@ này không dùng IDF, term saturation hay document-length normalization; ưu đ
 là nhẹ và luôn chạy offline, nhược điểm là từ phổ biến có trọng số ngang từ
 hiếm. Trong demo có thể gỡ `rank-bm25` hoặc gọi fallback để so sánh kết quả.
 
+## Bonus: Query Expansion cho Semantic Search
+
+`src/task5_semantic_search.py` có Query Expansion chạy offline qua hàm
+`expand_query()`. Trước khi dense retrieval, hệ thống nhận diện các từ khóa/
+biến thể theo domain Hạ Long và bổ sung các cụm liên quan vào query. Ví dụ:
+
+| Query gốc | Query bổ sung |
+|---|---|
+| `UNESCO` | `di san thien nhien the gioi`, `world heritage` |
+| `địa chất` | `karst`, `đá vôi`, `kiến tạo` |
+| `ô nhiễm` | `môi trường`, `chất lượng nước`, `e.coli` |
+
+Cách này tăng recall khi người dùng dùng alias, thuật ngữ tiếng Anh hoặc
+cách diễn đạt khác, nhưng không phụ thuộc API/LLM. Demo: truy vấn `Vịnh Hạ Long
+có giá trị địa chất nào?` và in `expand_query(query)` để cho thấy query đã được
+mở rộng trước khi truy vấn vector.
+
 ## Deploy trên Render
 
 Repo có sẵn `render.yaml` và `requirements-deploy.txt` để deploy nhẹ, không tải
