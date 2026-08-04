@@ -1,5 +1,14 @@
 # Ngày 8 — Hạ Long Travel RAG Pipeline
 
+| Thành viên | MSSV | Nhiệm vụ | Trạng thái |
+|-----------|------|----------|------------|
+| Chu Thị Yến Khanh | 2A202601739 | Role 1 (Team Leader & RAG Architect) |  |
+| Nguyễn Quang Huy | 2A202601873 | Role 2 (Data Engineering & Scraping Dev) |  |
+| Trương Đình Khoa | 2A202601297 | Role 3 (Vector Database & Dense Search Dev) |  |
+| Lương Đăng Doanh | 2A202601209 | Role 4 (Sparse Retrieval & Fallback Dev) |  |
+| Nguyễn Quốc Việt | 2A202601737 | Role 5 (Frontend UI & App Integration Dev) |  |
+| Vũ Quang Tùng | 2A202601545 | Role 6 (Evaluation & Benchmark QA Dev) |  |
+
 **Chương 2 | Ngày 8 trong 15**
 
 > Chatbot web khai thác kho tư liệu về Vịnh Hạ Long, gồm tài liệu về cảnh quan, giá trị tự nhiên và địa chất.
@@ -59,32 +68,32 @@ K3-Day08-RAG-Pipeline-Starter/
 
 ## Nhiệm Vụ Chi Tiết
 
-### Task 1 — Thu Thập Văn Bản Chính Sách Đại Học
+### Task 1 — Thu Thập Tư Liệu Về Vịnh Hạ Long
 
-Tìm và tải về **tối thiểu 3 văn bản chính sách/quy định** dạng PDF/DOCX về dịch vụ đại học (học phí, học bổng, ký túc xá, đăng ký học phần). Lưu vào `data/landing/`.
+Tìm và tải về **tối thiểu 3 tài liệu chính thức / nghiên cứu** (PDF/DOCX) liên quan đến Vịnh Hạ Long và khu vực lân cận: tài liệu khoa học, báo cáo địa chất, văn bản di sản (UNESCO), hoặc văn bản quản lý/bảo tồn địa phương. Lưu vào `data/landing/`.
 
-**Gợi ý nguồn** (ví dụ trang công khai RMIT Vietnam):
-- Học phí & phương thức thanh toán (Tuition Fees)
-- Chính sách học bổng (Scholarship eligibility)
-- Quy định ký túc xá / hỗ trợ chỗ ở (Accommodation Services)
-- Cổng đăng ký học phần (Course Registration Portal)
+**Gợi ý nguồn:**
+- Hồ sơ Di sản Thế giới (UNESCO) và báo cáo liên quan
+- Các bài báo khoa học/địa chất (tạp chí, hội thảo)
+- Trang chính quyền tỉnh Quảng Ninh (văn bản quản lý du lịch/bảo tồn)
+- Bản tin/ấn phẩm chuyên ngành về địa chất/du lịch
 
 **Yêu cầu:**
 - Lưu file gốc (PDF/DOCX) vào `data/landing/legal/`
-- Đặt tên file rõ ràng: `tuition-fees-rmit.pdf`, `academic-achievement-scholarship-rmit.pdf`, ...
+- Đặt tên file rõ ràng: `vnh-h-long-unesco.pdf`, `halong-geo-report-2011.pdf`, ...
 
 ---
 
-### Task 2 — Crawl Bài Viết/Thông Báo
+### Task 2 — Crawl Bài Viết / Nội Dung Du Lịch
 
-Crawl **tối thiểu 5 bài viết** về thông tin/thông báo dịch vụ đại học (sự kiện, thư viện, hỗ trợ sinh viên, học bổng).
+Crawl **tối thiểu 5 bài viết** về du lịch Vịnh Hạ Long (hướng dẫn tham quan, bài feature, tin tức, gợi ý hoạt động). Những file này sẽ dùng làm nguồn thực hành/experience trong pipeline.
 
-**Thư viện khuyến nghị:** [Crawl4AI](https://github.com/unclecode/crawl4ai)
+**Thư viện khuyến nghị:** [Crawl4AI](https://github.com/unclecode/crawl4ai) (hoặc requests + BeautifulSoup nếu thích tay hơn)
 
 **Yêu cầu:**
 - Lưu output vào `data/landing/news/`
 - Mỗi bài báo lưu thành 1 file (JSON hoặc HTML)
-- Ghi rõ metadata: URL gốc, ngày crawl, tiêu đề bài báo
+- Ghi rõ metadata: URL gốc, ngày crawl, tiêu đề, tác giả (nếu có)
 
 **Code mẫu (Crawl4AI):**
 ```python
@@ -93,7 +102,7 @@ from crawl4ai import AsyncWebCrawler
 async def crawl_article(url: str, output_dir: str):
     async with AsyncWebCrawler() as crawler:
         result = await crawler.arun(url=url)
-        # Lưu result.markdown vào file
+        # Lưu result.markdown / result.json vào file
         ...
 ```
 
@@ -115,26 +124,25 @@ from markitdown import MarkItDown
 md = MarkItDown()
 
 # Convert PDF
-result = md.convert("data/landing/legal/tuition-fees-rmit.pdf")
+result = md.convert("data/landing/legal/vnh-h-long.pdf")
 print(result.text_content)
 
 # Convert DOCX
-result = md.convert("data/landing/legal/academic-achievement-scholarship-rmit.docx")
+result = md.convert("data/landing/legal/halong-geo-report.docx")
 ```
 
-**Lưu ý:** MarkItDown cần cài thêm extra `pip install "markitdown[pdf]"` để convert được file
-PDF — nếu chỉ `pip install markitdown` sẽ báo lỗi `MissingDependencyException` khi convert PDF.
+**Lưu ý:** MarkItDown cần cài thêm extra `pip install "markitdown[pdf]"` để convert được file PDF — nếu không sẽ báo `MissingDependencyException`.
 
 **Yêu cầu:**
 - Output lưu vào `data/standardized/`
 - Giữ nguyên cấu trúc thư mục con (`legal/`, `news/`)
-- Mỗi file output có tên tương ứng: `tuition-fees-rmit.md`
+- Mỗi file output có tên tương ứng: `vnh-h-long.md`, `ha_long_01.md`, ...
 
 ---
 
 ### Task 4 — Chunking & Indexing
 
-Chọn **một loại chunking strategy** và **một embedding model** để index toàn bộ markdown files vào vector store.
+Chọn **một loại chunking strategy** và **một embedding model** để index toàn bộ markdown files (tập trung vào tài liệu Hạ Long) vào vector store.
 
 **Chunking — khuyến khích dùng [langchain-text-splitters](https://python.langchain.com/docs/modules/data_connection/document_transformers/):**
 ```bash
@@ -155,13 +163,13 @@ Các loại splitter phù hợp:
 ```bash
 pip install chromadb
 ```
-- ChromaDB lưu trữ vector embeddings (`BAAI/bge-m3`), metadata và thông tin phân đoạn local tại thư mục `chroma_db/`
+- ChromaDB lưu trữ vector embeddings, metadata và thông tin phân đoạn local tại thư mục `chroma_db/`
 - Hỗ trợ truy vấn tìm kiếm tương đồng Cosine (Cosine Similarity Search) phục vụ Dense Retrieval ở Task 5
 
 **Yêu cầu:**
-- Ghi rõ trong code: dùng chunking nào, chunk_size bao nhiêu, overlap bao nhiêu, vì sao
-- Ghi rõ embedding model nào, dimension bao nhiêu
-- Index thành công toàn bộ documents
+- Ghi rõ trong code: dùng chunking nào, chunk_size bao nhiêu, overlap bao nhiêu, và lý do
+- Ghi rõ embedding model nào và kích thước vector
+- Index thành công toàn bộ documents (bao gồm cả legal & news của Hạ Long)
 
 ---
 
@@ -181,13 +189,13 @@ def semantic_search(query: str, top_k: int = 10) -> list[dict]:
 
 - Input: query string + top_k
 - Output: danh sách chunks có score, sorted descending
-- Phải hoạt động được với embedding model đã chọn ở Task 4
+- Phải hoạt động với embedding model đã chọn ở Task 4 và thử nghiệm trên dữ liệu Hạ Long
 
 ---
 
 ### Task 6 — Lexical Search Module
 
-Viết module thực hiện **lexical search**. Mặc định sử dụng **BM25**.
+Viết module thực hiện **lexical search**. Mặc định sử dụng **BM25** (dùng cho truy vấn có thuật ngữ ràng buộc như tên đảo, hang, hoạt động cụ thể).
 
 ```bash
 pip install rank-bm25
