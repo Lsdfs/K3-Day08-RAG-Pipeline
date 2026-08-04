@@ -1,17 +1,22 @@
 [
-  {
-    "question": "Học phí hàng năm của chương trình Business tại RMIT Vietnam là bao nhiêu?",
-    "expected_answer": "Khoảng 375.840.000 VND mỗi năm (tùy chương trình cụ thể).",
-    "expected_context": "Trang Tuition Fees, mục Undergraduate Programs"
-  },
-  {
-    "question": "Học phí được thanh toán theo hình thức nào?",
-    "expected_answer": "Thanh toán theo từng học kỳ, tính theo từng môn học đã đăng ký.",
-    "expected_context": "Trang Tuition Fees, mục Payment Structure"
-  },
-  {
-    "question": "Trường có cung cấp ký túc xá trong khuôn viên không?",
-    "expected_answer": "Không — trường không cung cấp chỗ ở trong khuôn viên, nhưng có đội ngũ hỗ trợ sinh viên tìm chỗ ở gần trường.",
-    "expected_context": "Trang Accommodation Services"
-  }
+  {"question": "Học phí một học kỳ tại RMIT khoảng bao nhiêu?","expected_answer": "Khoảng 375 triệu VND/năm, thanh toán theo học kỳ"},
+  {"question": "Sinh viên được mượn tối đa bao nhiêu cuốn sách?","expected_answer": "Tối đa 10 cuốn trong 14 ngày"},
+  {"question": "Thư viện mở cửa đến mấy giờ?","expected_answer": "8h-22h các ngày trong tuần, cuối tuần 9h-17h, mùa thi 24h"},
+  {"question": "Phòng đơn ký túc xá giá bao nhiêu?","expected_answer": "4.500.000 VND/tháng"},
+  {"question": "Sinh viên đạo văn lần 2 bị xử lý thế nào?","expected_answer": "Điểm F cho môn học đó"},
+  {"question": "Học bổng Vingroup yêu cầu GPA bao nhiêu để duy trì?","expected_answer": "GPA tối thiểu 3.0 mỗi năm"},
+  {"question": "Sinh viên có thể đăng ký tối đa bao nhiêu tín chỉ mỗi học kỳ?","expected_answer": "Tối đa 20 tín chỉ, sinh viên GPA 3.2+ được đăng ký 24 tín chỉ"},
+  {"question": "Điểm F trong thang điểm 4.0 thì phải làm gì?","expected_answer": "Phải học lại môn đó"},
+  {"question": "Thư viện có dịch vụ tư vấn 1-1 không?","expected_answer": "Có, đặt lịch qua email library@vinuni.edu.vn"},
+  {"question": "Sinh viên đạo văn lần đầu bị phạt thế nào?","expected_answer": "Điểm 0 cho bài tập/bài thi và cảnh cáo"},
+  {"question": "Học phí đóng trễ bị phạt bao nhiêu phần trăm?","expected_answer": "Phạt 2% số tiền chưa đóng"},
+  {"question": "Ký túc xá đóng cửa lúc mấy giờ?","expected_answer": "23:00, về sau phải đăng ký với quản lý"},
+  {"question": "Làm thẻ sinh viên mới khi mất hết bao nhiêu?","expected_answer": "100.000 VND"},
+  {"question": "Sinh viên có GPA 3.8 được thưởng học bổng khuyến khích bao nhiêu?","expected_answer": "15 triệu VND"},
+  {"question": "Sinh viên quốc tế học tiếng Việt theo chương trình gì?","expected_answer": "Vietnamese Language Program (GDL-CHS-005-V2.0)"},
+  {"question": "Phòng học nhóm thư viện đặt được tối đa bao lâu?","expected_answer": "2 giờ mỗi ngày"},
+  {"question": "Dịch vụ sinh viên bao gồm những gì?","expected_answer": "Academic advising, career counseling, mental health support"},
+  {"question": "Cần IELTS bao nhiêu để tốt nghiệp?","expected_answer": "IELTS 6.5 hoặc tương đương"},
+  {"question": "Sinh viên quá hạn đóng học phí 30 ngày bị sao?","expected_answer": "Tạm dừng truy cập hệ thống học tập"},
+  {"question": "Có được sử dụng AI để làm bài tập không?","expected_answer": "Được phép nhưng phải công khai và trích dẫn, không được thay thế hoàn toàn công sức"}
 ]

@@ -88,22 +88,12 @@ def _split_recursive(text: str, separators: list[str]) -> list[str]:
 
 
 def embed_chunks(chunks: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Embed chunk texts. Uses sentence-transformers if available, mock fallback otherwise."""
-    global _embedder
-    try:
-        from sentence_transformers import SentenceTransformer
-        if _embedder is None:
-            _embedder = SentenceTransformer(EMBEDDING_MODEL)
-        texts = [c["content"] for c in chunks]
-        embeddings = _embedder.encode(texts, normalize_embeddings=True)
-        for i, emb in enumerate(embeddings):
-            chunks[i]["embedding"] = emb.tolist()
-    except ImportError:
-        import hashlib
-        for c in chunks:
-            h = hashlib.sha256(c["content"].encode()).digest()
-            emb = [float(b) / 255.0 for b in h[:64]] + [0.0] * 960
-            c["embedding"] = emb[:1024]
+    """Embed chunk texts using the central embedder."""
+    embedder = get_embedder()
+    texts = [c["content"] for c in chunks]
+    embeddings = embedder.encode(texts)
+    for i, emb in enumerate(embeddings):
+        chunks[i]["embedding"] = emb.tolist() if hasattr(emb, 'tolist') else list(emb)
     return chunks
 
 
@@ -135,32 +125,31 @@ def index_to_vectorstore(chunks: list[dict[str, Any]]) -> None:
 
 
 def get_embedder():
-    """Lazy-load and return the embedder. Prefers real model, falls back to mock."""
+    """Lazy-load embedder. Uses mock by default; set FORCE_MOCK=0 in env to try real model."""
     global _embedder
-    if _embedder is not None and hasattr(_embedder, '__class__'):
-        cls_name = _embedder.__class__.__name__
-        if cls_name != '_MockEmbedder':
-            return _embedder
-    try:
-        from sentence_transformers import SentenceTransformer
-        _embedder = SentenceTransformer(EMBEDDING_MODEL)
+    import os
+    if _embedder is not None:
         return _embedder
-    except ImportError:
-        pass
-    if _embedder is None or _embedder.__class__.__name__ == '_MockEmbedder':
-        class _MockEmbedder:
-            def encode(self, texts, normalize_embeddings=False):
-                import numpy as np
-                import hashlib
-                if isinstance(texts, str):
-                    texts = [texts]
-                result = []
-                for t in texts:
-                    h = hashlib.sha256(t.encode()).digest()
-                    emb = [float(b) / 255.0 for b in h[:64]] + [0.0] * 960
-                    result.append(emb[:1024])
-                return np.array(result) if len(result) > 1 else np.array(result)
-        _embedder = _MockEmbedder()
+    if os.getenv("FORCE_MOCK", "1") == "0":
+        try:
+            from sentence_transformers import SentenceTransformer
+            _embedder = SentenceTransformer(EMBEDDING_MODEL)
+            return _embedder
+        except Exception:
+            pass
+    import numpy as np
+    import hashlib
+    class _MockEmbedder:
+        def encode(self, texts, normalize_embeddings=False):
+            if isinstance(texts, str):
+                texts = [texts]
+            result = []
+            for t in texts:
+                h = hashlib.sha256(t.encode()).digest()
+                emb = [float(b) / 255.0 for b in h[:64]] + [0.0] * 960
+                result.append(emb[:1024])
+            return np.array(result) if len(result) > 1 else np.array(result)
+    _embedder = _MockEmbedder()
     return _embedder
 
 
