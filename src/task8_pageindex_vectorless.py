@@ -16,6 +16,8 @@ def _remote_search(query: str, top_k: int) -> list[dict] | None:
     The document must first be uploaded in PageIndex.  Its id is configured via
     PAGEINDEX_DOC_ID (or a comma-separated PAGEINDEX_DOC_IDS value).
     """
+    if os.getenv("ENABLE_PAGEINDEX_CLOUD", "0").lower() not in {"1", "true", "yes"}:
+        return None
     api_key = os.getenv("PAGEINDEX_API_KEY", "").strip()
     raw_ids = os.getenv("PAGEINDEX_DOC_IDS") or os.getenv("PAGEINDEX_DOC_ID", "")
     doc_ids = [value.strip() for value in raw_ids.split(",") if value.strip()]

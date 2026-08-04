@@ -12,6 +12,7 @@ reranking.  Run from the repository root:
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 import unicodedata
@@ -94,13 +95,54 @@ def averages(rows: list[dict]) -> Scores:
                     ("faithfulness", "answer_relevance", "context_recall", "context_precision")])
 
 
-def export(config_a: list[dict], config_b: list[dict]) -> None:
+def apply_ragas_scores(rows: list[dict]) -> None:
+    """Replace proxy scores with the four official RAGAS metric outputs."""
+    from datasets import Dataset
+    from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+    from ragas import evaluate
+    from ragas.metrics import faithfulness, answer_relevancy, context_recall, context_precision
+
+    openai_key = os.getenv("OPENAI_API_KEY", "").strip()
+    openrouter_key = os.getenv("OPENROUTER_API_KEY", "").strip()
+    if not openai_key and not openrouter_key:
+        raise RuntimeError("RAGAS requires OPENAI_API_KEY or OPENROUTER_API_KEY")
+
+    if openai_key:
+        llm = ChatOpenAI(model=os.getenv("RAGAS_LLM_MODEL", "gpt-4o-mini"),
+                         api_key=openai_key, temperature=0)
+        embeddings = OpenAIEmbeddings(model=os.getenv("RAGAS_EMBEDDING_MODEL", "text-embedding-3-small"),
+                                      api_key=openai_key)
+    else:
+        base_url = os.getenv("LLM_BASE_URL", "https://openrouter.ai/api/v1")
+        llm = ChatOpenAI(model=os.getenv("RAGAS_LLM_MODEL", "openai/gpt-4o-mini"),
+                         api_key=openrouter_key, base_url=base_url, temperature=0)
+        embeddings = OpenAIEmbeddings(
+            model=os.getenv("RAGAS_EMBEDDING_MODEL", "openai/text-embedding-3-small"),
+            api_key=openrouter_key, base_url=base_url)
+
+    dataset = Dataset.from_dict({
+        "question": [row["question"] for row in rows],
+        "answer": [row["answer"] for row in rows],
+        "contexts": [[source.get("content", "") for source in row["sources"]] for row in rows],
+        "ground_truth": [row["expected"] for row in rows],
+    })
+    result = evaluate(dataset, metrics=[faithfulness, answer_relevancy, context_recall, context_precision],
+                      llm=llm, embeddings=embeddings, raise_exceptions=True)
+    frame = result.to_pandas()
+    for row, (_, scored) in zip(rows, frame.iterrows()):
+        row["scores"] = Scores(
+            float(scored["faithfulness"]), float(scored["answer_relevancy"]),
+            float(scored["context_recall"]), float(scored["context_precision"]),
+        )
+
+
+def export(config_a: list[dict], config_b: list[dict], framework: str) -> None:
     a, b = averages(config_a), averages(config_b)
     metrics = (("Faithfulness", "faithfulness"), ("Answer Relevance", "answer_relevance"),
                ("Context Recall", "context_recall"), ("Context Precision", "context_precision"),
                ("Average", "average"))
-    lines = ["# RAG Evaluation Report", "", "Framework: **RAGAS-compatible offline evaluator** "
-             "(deterministic proxies; no judge API required).", "", f"Golden dataset: **{len(config_a)} cases**.", "",
+    lines = ["# RAG Evaluation Report", "", f"Framework: **{framework}**.", "",
+             f"Golden dataset: **{len(config_a)} cases**.", "",
              "## Overall scores", "", "| Metric | Config A: hybrid + rerank | Config B: dense-only | Delta |",
              "|---|---:|---:|---:|"]
     for label, field in metrics:
@@ -140,8 +182,20 @@ def main() -> None:
         raise ValueError("Golden dataset must contain at least 15 cases")
     config_a = run_config(items, use_reranking=True)
     config_b = run_config(items, use_reranking=False)
-    export(config_a, config_b)
-    print(f"Evaluated {len(items)} cases x 2 configs; report: {RESULTS_PATH}")
+    backend = os.getenv("EVAL_BACKEND", "ragas").lower()
+    framework = "RAGAS 0.1.21 — official built-in metrics"
+    try:
+        if backend != "ragas":
+            raise RuntimeError("offline backend explicitly selected")
+        apply_ragas_scores(config_a)
+        apply_ragas_scores(config_b)
+    except Exception as exc:
+        if os.getenv("RAGAS_STRICT", "0").lower() in {"1", "true", "yes"}:
+            raise
+        framework = f"Offline fallback (RAGAS unavailable: {type(exc).__name__})"
+        print(f"RAGAS unavailable; using deterministic fallback: {exc}")
+    export(config_a, config_b, framework)
+    print(f"Evaluated {len(items)} cases x 2 configs with {framework}; report: {RESULTS_PATH}")
 
 
 if __name__ == "__main__":
