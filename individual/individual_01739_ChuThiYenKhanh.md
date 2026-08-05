@@ -1,4 +1,4 @@
-# Bài cá nhân — Role 3: Vector Database & Dense Search
+# Individual 01739 — Role 3: Vector Database & Dense Search
 
 | Thông tin | Giá trị |
 |---|---|
